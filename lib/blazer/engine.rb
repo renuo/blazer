@@ -1,3 +1,5 @@
+require "bootstrap/engine"
+
 module Blazer
   class Engine < ::Rails::Engine
     isolate_namespace Blazer

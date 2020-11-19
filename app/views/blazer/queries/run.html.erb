@@ -117,7 +117,7 @@
         <% if v.is_a?(String) && v == "" %>
           <div class="text-muted">empty string</div>
         <% else %>
-          <p style="font-size: 160px;"><%= blazer_format_value(@columns.first, v) %></p>
+          <h5 class="single-value"><%= blazer_format_value(@columns.first, v) %></h5>
         <% end %>
       <% else %>
         <% @no_chart = true %>

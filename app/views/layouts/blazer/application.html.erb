@@ -9,8 +9,11 @@
       <%= stylesheet_link_tag "blazer/bootstrap-propshaft", "blazer/bootstrap", "blazer/selectize", "blazer/github", "blazer/daterangepicker", "blazer/application" %>
       <%= javascript_include_tag "blazer/jquery", "blazer/rails-ujs", "blazer/stupidtable", "blazer/stupidtable-custom-settings", "blazer/jquery.stickytableheaders", "blazer/selectize", "blazer/highlight.min", "blazer/moment", "blazer/moment-timezone-with-data", "blazer/daterangepicker", "blazer/chart.umd", "blazer/chartjs-adapter-date-fns.bundle", "blazer/chartkick", "blazer/mapkick.bundle", "blazer/ace/ace", "blazer/ace/ext-language_tools", "blazer/ace/theme-twilight", "blazer/ace/mode-sql", "blazer/ace/snippets/text", "blazer/ace/snippets/sql", "blazer/Sortable", "blazer/bootstrap", "blazer/vue.global.prod", "blazer/routes", "blazer/queries", "blazer/fuzzysearch", "blazer/application", nonce: true %>
     <% else %>
+      <%= javascript_include_tag Blazer.chart_library %>
       <%= stylesheet_link_tag "blazer/application" %>
       <%= javascript_include_tag "blazer/application", nonce: true %>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack.min.css" rel="stylesheet"/>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.0.1/gridstack-all.js"></script>      
     <% end %>
     <%= javascript_tag nonce: true do %>
       <%= blazer_js_var "rootPath", root_path %>

@@ -1,20 +1,16 @@
 <% blazer_title @dashboard.name %>
 
-<div class="topbar">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
   <div class="container">
-    <div class="row" style="padding-top: 13px;">
-      <div class="col-sm-9">
-        <%= render partial: "blazer/nav" %>
-        <h3 style="line-height: 34px; display: inline; margin-left: 5px;">
-          <%= @dashboard.name %>
-        </h3>
-      </div>
-      <div class="col-sm-3 text-right">
-        <%= link_to "Edit", edit_dashboard_path(@dashboard, params: variable_params(@dashboard)), class: "btn btn-info" %>
-      </div>
+    <%= render partial: "blazer/nav" %>
+    <div class="navbar-brand">
+      <%= @dashboard.name %>
+    </div>
+    <div class="nav ms-auto">
+      <%= link_to "Edit", edit_dashboard_path(@dashboard, variable_params(@dashboard)), class: "btn btn-info" %>
     </div>
   </div>
-</div>
+</nav>
 
 <div style="margin-bottom: 60px;"></div>
 
@@ -26,28 +22,40 @@
 <% end %>
 
 <% if @bind_vars.any? %>
-  <%= render partial: "blazer/variables", locals: {action: dashboard_path(@dashboard)} %>
+  <%= render partial: "blazer/variables", locals: { action: dashboard_path(@dashboard) } %>
 <% else %>
   <div style="padding-bottom: 15px;"></div>
 <% end %>
-
-<% @queries.each_with_index do |query, i| %>
-  <div class="chart-container">
-    <h4><%= link_to query.friendly_name, query_path(query, params: variable_params(query)), target: "_blank" %></h4>
-    <div id="chart-<%= i %>" class="chart">
-      <p class="text-muted">Loading...</p>
+<div style="display: none">
+  <% @queries.each_with_index do |query, i| %>
+    <div class="chart-container d-flex flex-column text-center h-100" id="query-<%= query.id %>">
+      <h4 class="text-center">
+        <%= link_to query.friendly_name, query_path(query, variable_params(@dashboard)), target: "_blank" %>
+      </h4>
+      <div id="chart-<%= i %>" class="chart">
+        <p class="text-muted">Loading...</p>
+      </div>
     </div>
-  </div>
-  <%= javascript_tag nonce: true do %>
-    <% data = {statement: query.statement, query_id: query.id, data_source: query.data_source, variables: variable_params(query), only_chart: true} %>
-    <% data.merge!(cohort_period: params[:cohort_period]) if params[:cohort_period] %>
-    <%= blazer_js_var "data", data %>
+  <% end %>
+</div>
+
+<div class="gs-wrapper">
+  <div class="grid-stack"></div>
+</div>
+
+<%= javascript_tag nonce: true do %>
+  <% @queries.each_with_index do |query, i| %>
+    <%= blazer_js_var "data", {statement: query.statement, query_id: query.id, data_source: query.data_source, only_chart: true, cohort_period: params[:cohort_period]} %>
 
     runQuery(data, function (data) {
       $("#chart-<%= i %>").html(data)
       $("#chart-<%= i %> table").stupidtable(stupidtableCustomSettings)
+      textFit(document.getElementsByClassName('single-value'));
     }, function (message) {
       $("#chart-<%= i %>").addClass("query-error").html(message)
     });
   <% end %>
+  const savePositionURL = '<%= dashboard_path(@dashboard, variable_params(@dashboard), format: :json) %>';
+  let serializedData = <%= @dashboard_positions.html_safe %>;
+  gsDashboards(serializedData, savePositionURL);
 <% end %>

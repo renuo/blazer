@@ -34,16 +34,28 @@ module Blazer
 
     private
 
+    def load_dashboard_positions(dashboard, queries)
+      dashboard_positions = JSON.load(dashboard.positions) || []
+      if queries.size > dashboard_positions.size
+        ids = dashboard_positions.map { |x| x['id'].to_i }
+        new_queries = queries.reject { |q| ids.include? q.id }
+        new_queries.each do |q|
+          dashboard_positions.push({ x: 0, y: 0, w: 2, h: 2, 'id' => q.id });
+        end
+      end
+      queries_ids = queries.map(&:id)
+      dashboard_positions.select! { |pos| queries_ids.include?(pos['id'].to_i) }
+      dashboard_positions.to_json
+    end
+
     def process_vars(statement, var_params = nil)
       var_params ||= request.query_parameters
       (@bind_vars ||= []).concat(statement.variables).uniq!
       # update in-place so populated in view and consistent across queries on dashboard
       @bind_vars.each do |var|
-        if !var_params[var]
-          default = statement.data_source.variable_defaults[var]
-          # only add if default exists
-          var_params[var] = default if default
-        end
+        default = statement.data_source.variable_defaults[var]
+        # only add if default exists
+        var_params[var] = default if default
       end
       runnable = @bind_vars.all? { |v| var_params[v] }
       statement.add_values(var_params) if runnable
@@ -109,16 +121,19 @@ module Blazer
       var_params ||= request.query_parameters
       var_params.slice(*permitted_keys)
     end
+
     helper_method :variable_params
 
     def nested_variable_params(resource)
       variable_params(resource, request.query_parameters["variables"] || {})
     end
+
     helper_method :nested_variable_params
 
     def blazer_user
       send(Blazer.user_method) if Blazer.user_method && respond_to?(Blazer.user_method, true)
     end
+
     helper_method :blazer_user
 
     def render_errors(resource)

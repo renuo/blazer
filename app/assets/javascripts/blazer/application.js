@@ -1,4 +1,5 @@
 //= require ./jquery
+//= require ./gs_dashboards
 //= require ./rails-ujs
 //= require ./stupidtable
 //= require ./stupidtable-custom-settings
@@ -14,11 +15,13 @@
 //= require ./mapkick.bundle
 //= require ./ace
 //= require ./Sortable
-//= require ./bootstrap
+//= require popper
+//= require bootstrap
 //= require ./vue.global.prod
 //= require ./routes
 //= require ./queries
 //= require ./fuzzysearch
+//= require ./textFit
 
 $(document).on('mouseenter', '.dropdown-toggle', function () {
   $(this).parent().addClass('open')
