@@ -134,6 +134,20 @@ module Blazer
     end
   end
 
+  def self.timepicker_ranges
+    settings["timepicker_ranges"] || [["Today", 0, 0], ["Last 7 Days", 6, 0], ["Last 30 Days", 29, 0]]
+  end
+
+  def self.chart_library
+    settings['chart_library'] || 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js'
+  end
+
+  def self.extract_vars(statement)
+    # strip commented out lines
+    # and regex {1} or {1,2}
+    statement.to_s.gsub(/\-\-.+/, "").gsub(/\/\*.+\*\//m, "").scan(/\{\w*?\}/i).map { |v| v[1...-1] }.reject { |v| /\A\d+(\,\d+)?\z/.match(v) || v.empty? }.uniq
+  end
+
   def self.run_checks(schedule: nil)
     checks = Blazer::Check.includes(:query)
     checks = checks.where(schedule: schedule) if schedule
