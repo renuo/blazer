@@ -30,6 +30,20 @@ module Blazer
 
     private
 
+      def load_dashboard_positions(dashboard, queries)
+        dashboard_positions = JSON.load(dashboard.positions) || []
+        if queries.size > dashboard_positions.size
+          ids = dashboard_positions.map { |x| x['id'].to_i }
+          new_queries = queries.reject { |q| ids.include? q.id }
+          new_queries.each do |q|
+            dashboard_positions.push({x: 0, y:0, width: 2, height: 2, 'id' => q.id});
+          end
+        end
+        queries_ids = queries.map(&:id)
+        dashboard_positions.select! { |pos| queries_ids.include?(pos['id'].to_i) }
+        dashboard_positions.to_json
+      end
+
       def process_vars(statement, data_source)
         (@bind_vars ||= []).concat(Blazer.extract_vars(statement)).uniq!
         @bind_vars.each do |var|

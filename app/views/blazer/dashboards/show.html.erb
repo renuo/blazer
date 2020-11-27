@@ -57,7 +57,7 @@
     $("#chart-<%= i %>").addClass("query-error").html(message)
   });
   <% end %>
-  const savePositionURL = '<%= dashboard_path(@dashboard, variable_params, format: :json) %>';
+  const savePositionURL = '<%= dashboard_path(@dashboard, variable_params(@dashboard), format: :json) %>';
   let serializedData = <%= @dashboard_positions.html_safe %>;
   gsDashboards(serializedData, savePositionURL);
 </script>

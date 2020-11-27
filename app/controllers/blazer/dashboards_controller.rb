@@ -39,17 +39,8 @@ module Blazer
           @sql_errors << error if error
         end
       end
-      @dashboard_positions = JSON.load(@dashboard.positions) || []
-      if @queries.size > @dashboard_positions.size
-        ids = @dashboard_positions.map { |x| x['id'].to_i }
-        new_queries = @queries.reject { |q| ids.include? q.id }
-        new_queries.each do |q|
-          @dashboard_positions.push({x: 0, y:0, width: 2, height: 2, 'id' => q.id});
-        end
-      end
-      queries_ids = @queries.map(&:id)
-      @dashboard_positions.select! { |pos| queries_ids.include?(pos['id'].to_i) }
-      @dashboard_positions = @dashboard_positions.to_json
+
+      @dashboard_positions = load_dashboard_positions(@dashboard, @queries)
     end
 
     def edit
