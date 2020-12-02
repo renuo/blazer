@@ -48,7 +48,7 @@
 </div>
 <script>
   <% @queries.each_with_index do |query, i| %>
-  <%= blazer_js_var "data", {statement: query.statement, query_id: query.id, data_source: query.data_source, only_chart: true} %>
+  <%= blazer_js_var "data", {statement: @statements[i], query_id: query.id, data_source: query.data_source, only_chart: true} %>
 
   runQuery(data, function (data) {
     $("#chart-<%= i %>").html(data)
