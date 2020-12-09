@@ -33,7 +33,7 @@
 <div style="display: none">
   <% @queries.each_with_index do |query, i| %>
     <div class="chart-container" id="query-<%= query.id %>">
-      <h4><%= link_to query.friendly_name, query_path(query, variable_params), target: "_blank" %></h4>
+      <h4><%= link_to query.friendly_name, query_path(query, variable_params(@dashboard)), target: "_blank" %></h4>
       <div id="chart-<%= i %>" class="chart">
         <p class="text-muted">Loading...</p>
       </div>
@@ -47,14 +47,6 @@
   </div>
 </div>
 
-    runQuery(data, function (data) {
-      $("#chart-<%= i %>").html(data)
-      $("#chart-<%= i %> table").stupidtable(stupidtableCustomSettings)
-    }, function (message) {
-      $("#chart-<%= i %>").addClass("query-error").html(message)
-    });
-  </script>
-<% end %>
 <script>
   <% @queries.each_with_index do |query, i| %>
   <%= blazer_js_var "data", {statement: @statements[i], query_id: query.id, data_source: query.data_source, only_chart: true, cohort_period: params[:cohort_period]} %>

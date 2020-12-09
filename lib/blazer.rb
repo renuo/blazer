@@ -122,6 +122,10 @@ module Blazer
     settings["timepicker_ranges"] || [["Today", 0, 0], ["Last 7 Days", 6, 0], ["Last 30 Days", 29, 0]]
   end
 
+  def self.chart_library
+    settings['chart_library'] || 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js'
+  end
+
   def self.extract_vars(statement)
     # strip commented out lines
     # and regex {1} or {1,2}
