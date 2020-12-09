@@ -239,3 +239,9 @@ h2 {
 .schema-table {
   max-width: 500px;
 }
+
+.single-value {
+  font-size: 160px;
+  line-height: 160px;
+}
+
