@@ -52,7 +52,7 @@ module Blazer
       respond_to do |format|
         format.html do
           if @dashboard.errors.blank? 
-            redirect_to dashboard_path(@dashboard, variable_params)
+            redirect_to dashboard_path(@dashboard, variable_params(@dashboard))
           else
             render_errors @dashboard
           end
