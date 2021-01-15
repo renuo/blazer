@@ -1,13 +1,10 @@
-/*
- *= require ./bootstrap
- *= require ./selectize
- *= require ./github
- *= require ./daterangepicker
- *= require ./gridstack
- *= require ./gridstack-extra
- *= require ./gs_dashboards
- *= require_self
- */
+@import "bootstrap";
+@import 'selectize';
+@import 'github';
+@import 'daterangepicker';
+@import 'gridstack';
+@import 'gridstack-extra';
+@import 'gs_dashboards';
 
 pre {
   border: none;
@@ -54,7 +51,7 @@ input.search:focus {
   outline: none;
 }
 
-.form-inline .selectize-control, .text-right .selectize-control {
+.form-inline .selectize-control, .text-end .selectize-control {
   display: inline-block;
   vertical-align: middle;
   margin-left: 5px;
@@ -89,11 +86,11 @@ input.search:focus {
 }
 
 .chart {
-  height: 300px;
   text-align: center;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  flex: 1 1 auto;
 }
 
 .chart > .results-container {
@@ -148,23 +145,14 @@ input.search:focus {
   color: #000;
 }
 
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  z-index: 1001;
-  border-bottom: solid 1px whitesmoke;
-  background-color: #fff;
-}
-
 .glyphicon-remove {
   cursor: pointer;
   color: #d9534f;
   display: none;
   float: right;
-  margin-top: 3px;
+  &::before {
+    content: 'X'
+  }
 }
 
 .list-group li:hover .glyphicon-remove {
@@ -224,7 +212,7 @@ h1, h2, h3, h4, p, hr, .table, .navbar, #header, .alert, .form-group {
   margin-bottom: 15px;
 }
 
-.double-margin, .chart-container {
+.double-margin {
   margin-bottom: 30px;
 }
 
@@ -241,7 +229,7 @@ h2 {
 }
 
 .single-value {
-  font-size: 160px;
-  line-height: 160px;
+  width: 100%;
+  height: 100%;
 }
 

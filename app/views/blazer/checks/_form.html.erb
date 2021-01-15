@@ -9,7 +9,7 @@
 
   <div class="form-group">
     <%= f.label :query_id, "Query" %>
-    <div class="hide">
+    <div class="d-none">
       <%= f.select :query_id, [], {include_blank: true} %>
     </div>
     <script>
@@ -23,7 +23,7 @@
   <% if @check.respond_to?(:check_type) %>
     <div class="form-group">
       <%= f.label :check_type, "Alert if" %>
-      <div class="hide">
+      <div class="d-none">
         <% check_options = [["Any results (bad data)", "bad_data"], ["No results (missing data)", "missing_data"]] %>
         <% check_options << ["Anomaly (most recent data point)", "anomaly"] if Blazer.anomaly_checks %>
         <%= f.select :check_type, check_options %>
@@ -35,7 +35,7 @@
   <% elsif @check.respond_to?(:invert) %>
     <div class="form-group">
       <%= f.label :invert, "Fails if" %>
-      <div class="hide">
+      <div class="d-none">
         <%= f.select :invert, [["Any results (bad data)", false], ["No results (missing data)", true]] %>
       </div>
       <script>
@@ -47,7 +47,7 @@
   <% if @check.respond_to?(:schedule) && Blazer.check_schedules %>
     <div class="form-group">
       <%= f.label :schedule, "Run every" %>
-      <div class="hide">
+      <div class="d-none">
         <%= f.select :schedule, Blazer.check_schedules.map { |v| [v, v] } %>
       </div>
       <script>

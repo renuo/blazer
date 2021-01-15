@@ -13,11 +13,13 @@
 //= require ./chartkick
 //= require ./ace
 //= require ./Sortable
-//= require ./bootstrap
+//= require ./popper2
+//= require bootstrap-sprockets
 //= require ./vue
 //= require ./routes
 //= require ./queries
 //= require ./fuzzysearch
+//= require ./textFit
 
 Vue.config.devtools = false
 Vue.config.productionTip = false

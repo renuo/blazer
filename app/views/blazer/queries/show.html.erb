@@ -1,25 +1,22 @@
 <% blazer_title @query.name %>
 
-<div class="topbar">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
   <div class="container">
-    <div class="row" style="padding-top: 13px;">
-      <div class="col-sm-9">
-        <%= render partial: "blazer/nav" %>
-        <h3 style="line-height: 34px; display: inline; margin-left: 5px;">
-          <%= @query.name %>
-        </h3>
-      </div>
-      <div class="col-sm-3 text-right">
-        <%= link_to "Edit", edit_query_path(@query, variable_params(@query)), class: "btn btn-default", disabled: !@query.editable?(blazer_user) %>
-        <%= link_to "Fork", new_query_path(variable_params(@query).merge(fork_query_id: @query.id, data_source: @query.data_source, name: @query.name)), class: "btn btn-info" %>
+    <%= render partial: "blazer/nav" %>
+    <div class="navbar-brand">
+      <%= @query.name %>
+    </div>
 
-        <% if !@error && @success %>
-          <%= button_to "Download", run_queries_path(query_id: @query.id, format: "csv", forecast: params[:forecast], cohort_period: params[:cohort_period]), params: {statement: @statement}, class: "btn btn-primary" %>
-        <% end %>
-      </div>
+    <div class="nav ms-auto">
+      <%= link_to "Edit", edit_query_path(@query, variable_params(@query)), class: "btn btn-secondary", disabled: !@query.editable?(blazer_user) %>
+      <%= link_to "Fork", new_query_path(variable_params(@query).merge(fork_query_id: @query.id, data_source: @query.data_source, name: @query.name)), class: "btn btn-info ms-1" %>
+
+      <% if !@error && @success %>
+        <%= button_to "Download", run_queries_path(query_id: @query.id, format: "csv", forecast: params[:forecast], cohort_period: params[:cohort_period]), params: { statement: @statement }, class: "btn btn-primary ms-1" %>
+      <% end %>
     </div>
   </div>
-</div>
+</nav>
 
 <div style="margin-bottom: 60px;"></div>
 
@@ -37,9 +34,9 @@
   <p><%= @query.description %></p>
 <% end %>
 
-<%= render partial: "blazer/variables", locals: {action: query_path(@query)} %>
+<%= render partial: "blazer/variables", locals: { action: query_path(@query) } %>
 
-<pre id="code"><code><%= @statement %></code></pre>
+<pre id="code" class="p-3 bg-light"><code><%= @statement %></code></pre>
 
 <% if @success %>
   <div id="results">
