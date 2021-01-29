@@ -16,7 +16,7 @@
       <%= blazer_js_var "queries", Blazer::Query.active.named.order(:name).select("id, name").map { |q| {text: q.name, value: q.id} } %>
       <%= blazer_js_var "items", [@check.query_id].compact %>
 
-      $("#check_query_id").selectize({options: queries, items: items, highlight: false, maxOptions: 100}).parents(".hide").removeClass("hide");
+      $("#check_query_id").selectize({options: queries, items: items, highlight: false, maxOptions: 100}).parents(".d-none").removeClass("d-none");
     </script>
   </div>
 
@@ -29,7 +29,7 @@
         <%= f.select :check_type, check_options %>
       </div>
       <script>
-        $("#check_check_type").selectize({}).parent().removeClass("hide");
+        $("#check_check_type").selectize({}).parent().removeClass("d-none");
       </script>
     </div>
   <% elsif @check.respond_to?(:invert) %>
@@ -39,7 +39,7 @@
         <%= f.select :invert, [["Any results (bad data)", false], ["No results (missing data)", true]] %>
       </div>
       <script>
-        $("#check_invert").selectize({}).parent().removeClass("hide");
+        $("#check_invert").selectize({}).parent().removeClass("d-none");
       </script>
     </div>
   <% end %>
@@ -51,7 +51,7 @@
         <%= f.select :schedule, Blazer.check_schedules.map { |v| [v, v] } %>
       </div>
       <script>
-        $("#check_schedule").selectize({}).parent().removeClass("hide");
+        $("#check_schedule").selectize({}).parent().removeClass("d-none");
       </script>
     </div>
   <% end %>
