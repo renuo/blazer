@@ -1,0 +1,307 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/Users/romanicus/dev/code/private/blazer/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210307.0/
+Adapters	lib/blazer/adapters/athena_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/base_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/bigquery_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/cassandra_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/drill_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/druid_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/elasticsearch_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/hive_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/ignite_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/influxdb_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/mongodb_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/neo4j_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/presto_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/salesforce_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/snowflake_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/soda_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/spark_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+Adapters	lib/blazer/adapters/sql_adapter.rb	/^  module Adapters$/;"	m	module:Blazer
+AthenaAdapter	lib/blazer/adapters/athena_adapter.rb	/^    class AthenaAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+BaseAdapter	lib/blazer/adapters/base_adapter.rb	/^    class BaseAdapter$/;"	c	module:Blazer.Adapters
+BigQueryAdapter	lib/blazer/adapters/bigquery_adapter.rb	/^    class BigQueryAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+Blazer	lib/blazer.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/athena_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/base_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/bigquery_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/cassandra_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/drill_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/druid_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/elasticsearch_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/hive_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/ignite_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/influxdb_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/mongodb_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/neo4j_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/presto_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/salesforce_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/snowflake_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/soda_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/spark_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/adapters/sql_adapter.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/data_source.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/engine.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/result.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/run_statement.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/run_statement_job.rb	/^module Blazer$/;"	m
+Blazer	lib/blazer/version.rb	/^module Blazer$/;"	m
+Blazer	lib/generators/blazer/install_generator.rb	/^module Blazer$/;"	m
+Blazer	lib/generators/blazer/uploads_generator.rb	/^module Blazer$/;"	m
+CassandraAdapter	lib/blazer/adapters/cassandra_adapter.rb	/^    class CassandraAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+DataSource	lib/blazer/data_source.rb	/^  class DataSource$/;"	c	module:Blazer	mixin:extend:Forwardable
+DrillAdapter	lib/blazer/adapters/drill_adapter.rb	/^    class DrillAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+DruidAdapter	lib/blazer/adapters/druid_adapter.rb	/^    class DruidAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+ElasticsearchAdapter	lib/blazer/adapters/elasticsearch_adapter.rb	/^    class ElasticsearchAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+Engine	lib/blazer/engine.rb	/^  class Engine < ::Rails::Engine$/;"	c	module:Blazer
+Error	lib/blazer.rb	/^  class Error < StandardError; end$/;"	c	module:Blazer
+Generators	lib/generators/blazer/install_generator.rb	/^  module Generators$/;"	m	module:Blazer
+Generators	lib/generators/blazer/uploads_generator.rb	/^  module Generators$/;"	m	module:Blazer
+HiveAdapter	lib/blazer/adapters/hive_adapter.rb	/^    class HiveAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+IgniteAdapter	lib/blazer/adapters/ignite_adapter.rb	/^    class IgniteAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+InfluxdbAdapter	lib/blazer/adapters/influxdb_adapter.rb	/^    class InfluxdbAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+InstallGenerator	lib/generators/blazer/install_generator.rb	/^    class InstallGenerator < Rails::Generators::Base$/;"	c	module:Blazer.Generators	mixin:include:ActiveRecord.Generators.Migration
+MongodbAdapter	lib/blazer/adapters/mongodb_adapter.rb	/^    class MongodbAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+Neo4jAdapter	lib/blazer/adapters/neo4j_adapter.rb	/^    class Neo4jAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+PrestoAdapter	lib/blazer/adapters/presto_adapter.rb	/^    class PrestoAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+Result	lib/blazer/result.rb	/^  class Result$/;"	c	module:Blazer
+RunStatement	lib/blazer/run_statement.rb	/^  class RunStatement$/;"	c	module:Blazer
+RunStatementJob	lib/blazer/run_statement_job.rb	/^  class RunStatementJob < ActiveJob::Base$/;"	c	module:Blazer
+SalesforceAdapter	lib/blazer/adapters/salesforce_adapter.rb	/^    class SalesforceAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+SnowflakeAdapter	lib/blazer/adapters/snowflake_adapter.rb	/^    class SnowflakeAdapter < SqlAdapter$/;"	c	module:Blazer.Adapters
+SodaAdapter	lib/blazer/adapters/soda_adapter.rb	/^    class SodaAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+SparkAdapter	lib/blazer/adapters/spark_adapter.rb	/^    class SparkAdapter < HiveAdapter$/;"	c	module:Blazer.Adapters
+SqlAdapter	lib/blazer/adapters/sql_adapter.rb	/^    class SqlAdapter < BaseAdapter$/;"	c	module:Blazer.Adapters
+TIMEOUT_ERRORS	lib/blazer.rb	/^  TIMEOUT_ERRORS = [$/;"	C	module:Blazer
+TIMEOUT_MESSAGE	lib/blazer.rb	/^  TIMEOUT_MESSAGE = "Query timed out :("$/;"	C	module:Blazer
+TIMESTAMP_REGEX	lib/blazer/adapters/druid_adapter.rb	/^      TIMESTAMP_REGEX = \/\\A\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z\\z\/$/;"	C	class:Blazer.Adapters.DruidAdapter
+TimeoutNotSupported	lib/blazer.rb	/^  class TimeoutNotSupported < Error; end$/;"	c	module:Blazer
+UploadError	lib/blazer.rb	/^  class UploadError < Error; end$/;"	c	module:Blazer
+UploadsGenerator	lib/generators/blazer/uploads_generator.rb	/^    class UploadsGenerator < Rails::Generators::Base$/;"	c	module:Blazer.Generators	mixin:include:ActiveRecord.Generators.Migration
+VERSION	lib/blazer/version.rb	/^  VERSION = "2.4.2"$/;"	C	module:Blazer
+adapter	lib/blazer/data_source.rb	/^    def adapter$/;"	f	class:Blazer.DataSource
+adapter_instance	lib/blazer/data_source.rb	/^    def adapter_instance$/;"	f	class:Blazer.DataSource
+adapter_name	lib/blazer/adapters/sql_adapter.rb	/^      def adapter_name$/;"	f	class:Blazer.Adapters.SqlAdapter
+adapters	lib/blazer.rb	/^  def self.adapters$/;"	S	module:Blazer
+add_schemas	lib/blazer/adapters/sql_adapter.rb	/^      def add_schemas(query)$/;"	f	class:Blazer.Adapters.SqlAdapter
+anomaly?	lib/blazer/result.rb	/^    def anomaly?(series)$/;"	f	class:Blazer.Result
+anomaly_checks	lib/blazer.rb	/^    attr_accessor :anomaly_checks$/;"	A	module:Blazer
+anomaly_checks=	lib/blazer.rb	/^    attr_accessor :anomaly_checks$/;"	A	module:Blazer
+async	lib/blazer.rb	/^    attr_accessor :async$/;"	A	module:Blazer
+async=	lib/blazer.rb	/^    attr_accessor :async$/;"	A	module:Blazer
+audit	lib/blazer.rb	/^    attr_accessor :audit$/;"	A	module:Blazer
+audit=	lib/blazer.rb	/^    attr_accessor :audit$/;"	A	module:Blazer
+before_action	lib/blazer.rb	/^    attr_accessor :before_action$/;"	A	module:Blazer
+before_action=	lib/blazer.rb	/^    attr_accessor :before_action$/;"	A	module:Blazer
+bigquery	lib/blazer/adapters/bigquery_adapter.rb	/^      def bigquery$/;"	f	class:Blazer.Adapters.BigQueryAdapter
+boom	lib/blazer/result.rb	/^    def boom$/;"	f	class:Blazer.Result
+cachable?	lib/blazer/adapters/base_adapter.rb	/^      def cachable?(statement)$/;"	f	class:Blazer.Adapters.BaseAdapter
+cachable?	lib/blazer/adapters/sql_adapter.rb	/^      def cachable?(statement)$/;"	f	class:Blazer.Adapters.SqlAdapter
+cache	lib/blazer.rb	/^    attr_accessor :cache$/;"	A	module:Blazer
+cache	lib/blazer/data_source.rb	/^    def cache$/;"	f	class:Blazer.DataSource
+cache=	lib/blazer.rb	/^    attr_accessor :cache$/;"	A	module:Blazer
+cache_expires_in	lib/blazer/data_source.rb	/^    def cache_expires_in$/;"	f	class:Blazer.DataSource
+cache_key	lib/blazer/data_source.rb	/^    def cache_key(key)$/;"	f	class:Blazer.DataSource
+cache_mode	lib/blazer/data_source.rb	/^    def cache_mode$/;"	f	class:Blazer.DataSource
+cache_slow_threshold	lib/blazer/data_source.rb	/^    def cache_slow_threshold$/;"	f	class:Blazer.DataSource
+cached?	lib/blazer/result.rb	/^    def cached?$/;"	f	class:Blazer.Result
+cached_at	lib/blazer/result.rb	/^    attr_reader :data_source, :columns, :rows, :error, :cached_at, :just_cached, :forecast_error$/;"	A	class:Blazer.Result
+cancel	lib/blazer/adapters/base_adapter.rb	/^      def cancel(run_id)$/;"	f	class:Blazer.Adapters.BaseAdapter
+cancel	lib/blazer/adapters/snowflake_adapter.rb	/^      def cancel(run_id)$/;"	f	class:Blazer.Adapters.SnowflakeAdapter
+cancel	lib/blazer/adapters/sql_adapter.rb	/^      def cancel(run_id)$/;"	f	class:Blazer.Adapters.SqlAdapter
+chart_type	lib/blazer/result.rb	/^    def chart_type$/;"	f	class:Blazer.Result
+check_schedules	lib/blazer.rb	/^    attr_accessor :check_schedules$/;"	A	module:Blazer
+check_schedules=	lib/blazer.rb	/^    attr_accessor :check_schedules$/;"	A	module:Blazer
+clear_cache	lib/blazer/data_source.rb	/^    def clear_cache(statement)$/;"	f	class:Blazer.DataSource
+client	lib/blazer/adapters/athena_adapter.rb	/^      def client$/;"	f	class:Blazer.Adapters.AthenaAdapter
+client	lib/blazer/adapters/elasticsearch_adapter.rb	/^      def client$/;"	f	class:Blazer.Adapters.ElasticsearchAdapter
+client	lib/blazer/adapters/hive_adapter.rb	/^      def client$/;"	f	class:Blazer.Adapters.HiveAdapter
+client	lib/blazer/adapters/ignite_adapter.rb	/^      def client$/;"	f	class:Blazer.Adapters.IgniteAdapter
+client	lib/blazer/adapters/influxdb_adapter.rb	/^      def client$/;"	f	class:Blazer.Adapters.InfluxdbAdapter
+client	lib/blazer/adapters/mongodb_adapter.rb	/^      def client$/;"	f	class:Blazer.Adapters.MongodbAdapter
+client	lib/blazer/adapters/presto_adapter.rb	/^      def client$/;"	f	class:Blazer.Adapters.PrestoAdapter
+client	lib/blazer/adapters/salesforce_adapter.rb	/^      def client$/;"	f	class:Blazer.Adapters.SalesforceAdapter
+cluster	lib/blazer/adapters/cassandra_adapter.rb	/^      def cluster$/;"	f	class:Blazer.Adapters.CassandraAdapter
+cohort_analysis_statement	lib/blazer/adapters/base_adapter.rb	/^      def cohort_analysis_statement(statement, period:, days:)$/;"	f	class:Blazer.Adapters.BaseAdapter
+cohort_analysis_statement	lib/blazer/adapters/sql_adapter.rb	/^      def cohort_analysis_statement(statement, period:, days:)$/;"	f	class:Blazer.Adapters.SqlAdapter
+column_types	lib/blazer/result.rb	/^    def column_types$/;"	f	class:Blazer.Result
+columns	lib/blazer/result.rb	/^    attr_reader :data_source, :columns, :rows, :error, :cached_at, :just_cached, :forecast_error$/;"	A	class:Blazer.Result
+connection_model	lib/blazer/adapters/sql_adapter.rb	/^      attr_reader :connection_model$/;"	A	class:Blazer.Adapters.SqlAdapter
+copy_config	lib/generators/blazer/install_generator.rb	/^      def copy_config$/;"	f	class:Blazer.Generators.InstallGenerator
+copy_migration	lib/generators/blazer/install_generator.rb	/^      def copy_migration$/;"	f	class:Blazer.Generators.InstallGenerator
+copy_migration	lib/generators/blazer/uploads_generator.rb	/^      def copy_migration$/;"	f	class:Blazer.Generators.UploadsGenerator
+cost	lib/blazer/adapters/base_adapter.rb	/^      def cost(statement)$/;"	f	class:Blazer.Adapters.BaseAdapter
+cost	lib/blazer/adapters/sql_adapter.rb	/^      def cost(statement)$/;"	f	class:Blazer.Adapters.SqlAdapter
+data_source	lib/blazer/adapters/base_adapter.rb	/^      attr_reader :data_source$/;"	A	class:Blazer.Adapters.BaseAdapter
+data_source	lib/blazer/result.rb	/^    attr_reader :data_source, :columns, :rows, :error, :cached_at, :just_cached, :forecast_error$/;"	A	class:Blazer.Result
+data_sources	lib/blazer.rb	/^  def self.data_sources$/;"	S	module:Blazer
+database	lib/blazer/adapters/athena_adapter.rb	/^      def database$/;"	f	class:Blazer.Adapters.AthenaAdapter
+db	lib/blazer/adapters/mongodb_adapter.rb	/^      def db$/;"	f	class:Blazer.Adapters.MongodbAdapter
+dbms_type_cast	lib/blazer/adapters/snowflake_adapter.rb	/^            def dbms_type_cast(columns, values)$/;"	f	method:Blazer.Adapters.SnowflakeAdapter.initialize
+default_schema	lib/blazer/adapters/ignite_adapter.rb	/^      def default_schema$/;"	f	class:Blazer.Adapters.IgniteAdapter
+default_schema	lib/blazer/adapters/sql_adapter.rb	/^      def default_schema$/;"	f	class:Blazer.Adapters.SqlAdapter
+delete_results	lib/blazer/data_source.rb	/^    def delete_results(run_id)$/;"	f	class:Blazer.DataSource
+detect_adapter	lib/blazer/data_source.rb	/^    def detect_adapter$/;"	f	class:Blazer.DataSource
+detect_anomaly	lib/blazer/result.rb	/^    def detect_anomaly$/;"	f	class:Blazer.Result
+drill	lib/blazer/adapters/drill_adapter.rb	/^      def drill$/;"	f	class:Blazer.Adapters.DrillAdapter
+error	lib/blazer/result.rb	/^    attr_reader :data_source, :columns, :rows, :error, :cached_at, :just_cached, :forecast_error$/;"	A	class:Blazer.Result
+execute	lib/blazer/adapters/sql_adapter.rb	/^      def execute(statement)$/;"	f	class:Blazer.Adapters.SqlAdapter
+explain	lib/blazer/adapters/base_adapter.rb	/^      def explain(statement)$/;"	f	class:Blazer.Adapters.BaseAdapter
+explain	lib/blazer/adapters/sql_adapter.rb	/^      def explain(statement)$/;"	f	class:Blazer.Adapters.SqlAdapter
+extract_vars	lib/blazer.rb	/^  def self.extract_vars(statement)$/;"	S	module:Blazer
+fetch_error	lib/blazer/adapters/athena_adapter.rb	/^      def fetch_error(query_execution_id)$/;"	f	class:Blazer.Adapters.AthenaAdapter
+forecast	lib/blazer/result.rb	/^    def forecast$/;"	f	class:Blazer.Result
+forecast_error	lib/blazer/result.rb	/^    attr_reader :data_source, :columns, :rows, :error, :cached_at, :just_cached, :forecast_error$/;"	A	class:Blazer.Result
+forecastable?	lib/blazer/result.rb	/^    def forecastable?$/;"	f	class:Blazer.Result
+forecasting	lib/blazer.rb	/^    attr_accessor :forecasting$/;"	A	module:Blazer
+forecasting=	lib/blazer.rb	/^    attr_accessor :forecasting$/;"	A	module:Blazer
+from_email	lib/blazer.rb	/^    attr_accessor :from_email$/;"	A	module:Blazer
+from_email=	lib/blazer.rb	/^    attr_accessor :from_email$/;"	A	module:Blazer
+glue	lib/blazer/adapters/athena_adapter.rb	/^      def glue$/;"	f	class:Blazer.Adapters.AthenaAdapter
+id	lib/blazer/data_source.rb	/^    attr_reader :id, :settings$/;"	A	class:Blazer.DataSource
+images	lib/blazer.rb	/^    attr_accessor :images$/;"	A	module:Blazer
+images=	lib/blazer.rb	/^    attr_accessor :images$/;"	A	module:Blazer
+in_transaction	lib/blazer/adapters/sql_adapter.rb	/^      def in_transaction$/;"	f	class:Blazer.Adapters.SqlAdapter
+initialize	lib/blazer/adapters/base_adapter.rb	/^      def initialize(data_source)$/;"	f	class:Blazer.Adapters.BaseAdapter
+initialize	lib/blazer/adapters/snowflake_adapter.rb	/^      def initialize(data_source)$/;"	f	class:Blazer.Adapters.SnowflakeAdapter
+initialize	lib/blazer/adapters/sql_adapter.rb	/^      def initialize(data_source)$/;"	f	class:Blazer.Adapters.SqlAdapter
+initialize	lib/blazer/data_source.rb	/^    def initialize(id, settings)$/;"	f	class:Blazer.DataSource
+initialize	lib/blazer/result.rb	/^    def initialize(data_source, columns, rows, error, cached_at, just_cached)$/;"	f	class:Blazer.Result
+just_cached	lib/blazer/result.rb	/^    attr_reader :data_source, :columns, :rows, :error, :cached_at, :just_cached, :forecast_error$/;"	A	class:Blazer.Result
+keyspace	lib/blazer/adapters/cassandra_adapter.rb	/^      def keyspace$/;"	f	class:Blazer.Adapters.CassandraAdapter
+linked_columns	lib/blazer/data_source.rb	/^    def linked_columns$/;"	f	class:Blazer.DataSource
+local_time_suffix	lib/blazer/data_source.rb	/^    def local_time_suffix$/;"	f	class:Blazer.DataSource
+mapbox_access_token	lib/blazer.rb	/^    attr_accessor :mapbox_access_token$/;"	A	module:Blazer
+mapbox_access_token=	lib/blazer.rb	/^    attr_accessor :mapbox_access_token$/;"	A	module:Blazer
+migration_version	lib/generators/blazer/install_generator.rb	/^      def migration_version$/;"	f	class:Blazer.Generators.InstallGenerator
+migration_version	lib/generators/blazer/uploads_generator.rb	/^      def migration_version$/;"	f	class:Blazer.Generators.UploadsGenerator
+mysql?	lib/blazer/adapters/sql_adapter.rb	/^      def mysql?$/;"	f	class:Blazer.Adapters.SqlAdapter
+name	lib/blazer/adapters/snowflake_adapter.rb	/^            def self.name$/;"	S	method:Blazer.Adapters.SnowflakeAdapter.initialize
+name	lib/blazer/adapters/sql_adapter.rb	/^            def self.name$/;"	S	method:Blazer.Adapters.SqlAdapter.initialize
+name	lib/blazer/data_source.rb	/^    def name$/;"	f	class:Blazer.DataSource
+override_csp	lib/blazer.rb	/^    attr_accessor :override_csp$/;"	A	module:Blazer
+override_csp=	lib/blazer.rb	/^    attr_accessor :override_csp$/;"	A	module:Blazer
+perform	lib/blazer/run_statement.rb	/^    def perform(data_source, statement, options = {})$/;"	f	class:Blazer.RunStatement
+perform	lib/blazer/run_statement_job.rb	/^    def perform(data_source_id, statement, options)$/;"	f	class:Blazer.RunStatementJob
+postgresql?	lib/blazer/adapters/sql_adapter.rb	/^      def postgresql?$/;"	f	class:Blazer.Adapters.SqlAdapter
+prepared_statements	lib/blazer/adapters/snowflake_adapter.rb	/^            def prepared_statements$/;"	f	method:Blazer.Adapters.SnowflakeAdapter.initialize
+preview_statement	lib/blazer/adapters/athena_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.AthenaAdapter
+preview_statement	lib/blazer/adapters/base_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.BaseAdapter
+preview_statement	lib/blazer/adapters/bigquery_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.BigQueryAdapter
+preview_statement	lib/blazer/adapters/cassandra_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.CassandraAdapter
+preview_statement	lib/blazer/adapters/druid_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.DruidAdapter
+preview_statement	lib/blazer/adapters/elasticsearch_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.ElasticsearchAdapter
+preview_statement	lib/blazer/adapters/hive_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.HiveAdapter
+preview_statement	lib/blazer/adapters/ignite_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.IgniteAdapter
+preview_statement	lib/blazer/adapters/influxdb_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.InfluxdbAdapter
+preview_statement	lib/blazer/adapters/mongodb_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.MongodbAdapter
+preview_statement	lib/blazer/adapters/neo4j_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.Neo4jAdapter
+preview_statement	lib/blazer/adapters/presto_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.PrestoAdapter
+preview_statement	lib/blazer/adapters/salesforce_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.SalesforceAdapter
+preview_statement	lib/blazer/adapters/soda_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.SodaAdapter
+preview_statement	lib/blazer/adapters/sql_adapter.rb	/^      def preview_statement$/;"	f	class:Blazer.Adapters.SqlAdapter
+query_editable	lib/blazer.rb	/^    attr_accessor :query_editable$/;"	A	module:Blazer
+query_editable=	lib/blazer.rb	/^    attr_accessor :query_editable$/;"	A	module:Blazer
+query_viewable	lib/blazer.rb	/^    attr_accessor :query_viewable$/;"	A	module:Blazer
+query_viewable=	lib/blazer.rb	/^    attr_accessor :query_viewable$/;"	A	module:Blazer
+quote_column_name	lib/blazer/adapters/snowflake_adapter.rb	/^            def quote_column_name(name)$/;"	f	method:Blazer.Adapters.SnowflakeAdapter.initialize
+read_cache	lib/blazer/data_source.rb	/^    def read_cache(cache_key)$/;"	f	class:Blazer.DataSource
+reconnect	lib/blazer/adapters/base_adapter.rb	/^      def reconnect$/;"	f	class:Blazer.Adapters.BaseAdapter
+reconnect	lib/blazer/adapters/sql_adapter.rb	/^      def reconnect$/;"	f	class:Blazer.Adapters.SqlAdapter
+redshift?	lib/blazer/adapters/sql_adapter.rb	/^      def redshift?$/;"	f	class:Blazer.Adapters.SqlAdapter
+register_adapter	lib/blazer.rb	/^  def self.register_adapter(name, adapter)$/;"	S	module:Blazer
+rows	lib/blazer/result.rb	/^    attr_reader :data_source, :columns, :rows, :error, :cached_at, :just_cached, :forecast_error$/;"	A	class:Blazer.Result
+run_cache_key	lib/blazer/data_source.rb	/^    def run_cache_key(run_id)$/;"	f	class:Blazer.DataSource
+run_check	lib/blazer.rb	/^  def self.run_check(check)$/;"	S	module:Blazer
+run_checks	lib/blazer.rb	/^  def self.run_checks(schedule: nil)$/;"	S	module:Blazer
+run_results	lib/blazer/data_source.rb	/^    def run_results(run_id)$/;"	f	class:Blazer.DataSource
+run_statement	lib/blazer/adapters/athena_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.AthenaAdapter
+run_statement	lib/blazer/adapters/base_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.BaseAdapter
+run_statement	lib/blazer/adapters/bigquery_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.BigQueryAdapter
+run_statement	lib/blazer/adapters/cassandra_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.CassandraAdapter
+run_statement	lib/blazer/adapters/drill_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.DrillAdapter
+run_statement	lib/blazer/adapters/druid_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.DruidAdapter
+run_statement	lib/blazer/adapters/elasticsearch_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.ElasticsearchAdapter
+run_statement	lib/blazer/adapters/hive_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.HiveAdapter
+run_statement	lib/blazer/adapters/ignite_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.IgniteAdapter
+run_statement	lib/blazer/adapters/influxdb_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.InfluxdbAdapter
+run_statement	lib/blazer/adapters/mongodb_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.MongodbAdapter
+run_statement	lib/blazer/adapters/neo4j_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.Neo4jAdapter
+run_statement	lib/blazer/adapters/presto_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.PrestoAdapter
+run_statement	lib/blazer/adapters/salesforce_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.SalesforceAdapter
+run_statement	lib/blazer/adapters/soda_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.SodaAdapter
+run_statement	lib/blazer/adapters/sql_adapter.rb	/^      def run_statement(statement, comment)$/;"	f	class:Blazer.Adapters.SqlAdapter
+run_statement	lib/blazer/data_source.rb	/^    def run_statement(statement, options = {})$/;"	f	class:Blazer.DataSource
+run_statement_helper	lib/blazer/data_source.rb	/^    def run_statement_helper(statement, comment, run_id)$/;"	f	class:Blazer.DataSource
+schema	lib/blazer/adapters/athena_adapter.rb	/^      def schema$/;"	f	class:Blazer.Adapters.AthenaAdapter
+schema	lib/blazer/adapters/base_adapter.rb	/^      def schema$/;"	f	class:Blazer.Adapters.BaseAdapter
+schema	lib/blazer/adapters/bigquery_adapter.rb	/^      def schema$/;"	f	class:Blazer.Adapters.BigQueryAdapter
+schema	lib/blazer/adapters/cassandra_adapter.rb	/^      def schema$/;"	f	class:Blazer.Adapters.CassandraAdapter
+schema	lib/blazer/adapters/druid_adapter.rb	/^      def schema$/;"	f	class:Blazer.Adapters.DruidAdapter
+schema	lib/blazer/adapters/sql_adapter.rb	/^      def schema$/;"	f	class:Blazer.Adapters.SqlAdapter
+select_all	lib/blazer/adapters/sql_adapter.rb	/^      def select_all(statement, params = [])$/;"	f	class:Blazer.Adapters.SqlAdapter
+send_failing_checks	lib/blazer.rb	/^  def self.send_failing_checks$/;"	S	module:Blazer
+session	lib/blazer/adapters/cassandra_adapter.rb	/^      def session$/;"	f	class:Blazer.Adapters.CassandraAdapter
+session	lib/blazer/adapters/neo4j_adapter.rb	/^      def session$/;"	f	class:Blazer.Adapters.Neo4jAdapter
+set_timeout	lib/blazer/adapters/sql_adapter.rb	/^      def set_timeout(timeout)$/;"	f	class:Blazer.Adapters.SqlAdapter
+settings	lib/blazer.rb	/^  def self.settings$/;"	S	module:Blazer
+settings	lib/blazer/adapters/base_adapter.rb	/^      def settings$/;"	f	class:Blazer.Adapters.BaseAdapter
+settings	lib/blazer/data_source.rb	/^    attr_reader :id, :settings$/;"	A	class:Blazer.DataSource
+slack?	lib/blazer.rb	/^  def self.slack?$/;"	S	module:Blazer
+slack_webhook_url	lib/blazer.rb	/^    attr_accessor :slack_webhook_url$/;"	A	module:Blazer
+slack_webhook_url=	lib/blazer.rb	/^    attr_accessor :slack_webhook_url$/;"	A	module:Blazer
+smart_columns	lib/blazer/data_source.rb	/^    def smart_columns$/;"	f	class:Blazer.DataSource
+smart_variables	lib/blazer/data_source.rb	/^    def smart_variables$/;"	f	class:Blazer.DataSource
+snowflake?	lib/blazer/adapters/sql_adapter.rb	/^      def snowflake?$/;"	f	class:Blazer.Adapters.SqlAdapter
+sqlserver?	lib/blazer/adapters/sql_adapter.rb	/^      def sqlserver?$/;"	f	class:Blazer.Adapters.SqlAdapter
+statement_cache_key	lib/blazer/data_source.rb	/^    def statement_cache_key(statement)$/;"	f	class:Blazer.DataSource
+supports_cohort_analysis?	lib/blazer/adapters/base_adapter.rb	/^      def supports_cohort_analysis?$/;"	f	class:Blazer.Adapters.BaseAdapter
+supports_cohort_analysis?	lib/blazer/adapters/sql_adapter.rb	/^      def supports_cohort_analysis?$/;"	f	class:Blazer.Adapters.SqlAdapter
+table_columns	lib/blazer/adapters/bigquery_adapter.rb	/^      def table_columns(table_ref)$/;"	f	class:Blazer.Adapters.BigQueryAdapter
+table_refs	lib/blazer/adapters/bigquery_adapter.rb	/^      def table_refs$/;"	f	class:Blazer.Adapters.BigQueryAdapter
+tables	lib/blazer/adapters/athena_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.AthenaAdapter
+tables	lib/blazer/adapters/base_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.BaseAdapter
+tables	lib/blazer/adapters/bigquery_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.BigQueryAdapter
+tables	lib/blazer/adapters/cassandra_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.CassandraAdapter
+tables	lib/blazer/adapters/druid_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.DruidAdapter
+tables	lib/blazer/adapters/elasticsearch_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.ElasticsearchAdapter
+tables	lib/blazer/adapters/hive_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.HiveAdapter
+tables	lib/blazer/adapters/ignite_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.IgniteAdapter
+tables	lib/blazer/adapters/influxdb_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.InfluxdbAdapter
+tables	lib/blazer/adapters/mongodb_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.MongodbAdapter
+tables	lib/blazer/adapters/neo4j_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.Neo4jAdapter
+tables	lib/blazer/adapters/presto_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.PrestoAdapter
+tables	lib/blazer/adapters/salesforce_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.SalesforceAdapter
+tables	lib/blazer/adapters/soda_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.SodaAdapter
+tables	lib/blazer/adapters/spark_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.SparkAdapter
+tables	lib/blazer/adapters/sql_adapter.rb	/^      def tables$/;"	f	class:Blazer.Adapters.SqlAdapter
+time_zone	lib/blazer.rb	/^    attr_reader :time_zone$/;"	A	module:Blazer
+time_zone=	lib/blazer.rb	/^  def self.time_zone=(time_zone)$/;"	S	module:Blazer
+timed_out?	lib/blazer/result.rb	/^    def timed_out?$/;"	f	class:Blazer.Result
+timeout	lib/blazer/data_source.rb	/^    def timeout$/;"	f	class:Blazer.DataSource
+transform_statement	lib/blazer.rb	/^    attr_accessor :transform_statement$/;"	A	module:Blazer
+transform_statement=	lib/blazer.rb	/^    attr_accessor :transform_statement$/;"	A	module:Blazer
+transform_variable	lib/blazer.rb	/^    attr_accessor :transform_variable$/;"	A	module:Blazer
+transform_variable=	lib/blazer.rb	/^    attr_accessor :transform_variable$/;"	A	module:Blazer
+uploads?	lib/blazer.rb	/^  def self.uploads?$/;"	S	module:Blazer
+uploads_connection	lib/blazer.rb	/^  def self.uploads_connection$/;"	S	module:Blazer
+uploads_schema	lib/blazer.rb	/^  def self.uploads_schema$/;"	S	module:Blazer
+uploads_table_name	lib/blazer.rb	/^  def self.uploads_table_name(name)$/;"	S	module:Blazer
+uri	lib/blazer/adapters/cassandra_adapter.rb	/^      def uri$/;"	f	class:Blazer.Adapters.CassandraAdapter
+use_transaction?	lib/blazer/adapters/sql_adapter.rb	/^      def use_transaction?$/;"	f	class:Blazer.Adapters.SqlAdapter
+user_class	lib/blazer.rb	/^  def self.user_class$/;"	S	module:Blazer
+user_class=	lib/blazer.rb	/^    attr_writer :user_class$/;"	A	module:Blazer
+user_method	lib/blazer.rb	/^  def self.user_method$/;"	S	module:Blazer
+user_method=	lib/blazer.rb	/^    attr_writer :user_method$/;"	A	module:Blazer
+user_name	lib/blazer.rb	/^    attr_accessor :user_name$/;"	A	module:Blazer
+user_name=	lib/blazer.rb	/^    attr_accessor :user_name$/;"	A	module:Blazer
+variable_defaults	lib/blazer/data_source.rb	/^    def variable_defaults$/;"	f	class:Blazer.DataSource
