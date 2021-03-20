@@ -193,14 +193,13 @@
             getCompletions: function(editor, session, pos, prefix, callback) {
                 const tableName = extractTableNameFromEditor(editor.getValue(), pos);
                 if (tableName !== null) {
-                    let completableColumns = [];
                     for (index = 0; index < tableNames.length; index++) {
                         const entry = tableNames[index];
                         if (entry.value === tableName) {
-                            completableColumns = completableColumns.concat(entry.columns)
+                            callback(null, entry.columns);
+                            break;
                         }
                     }
-                    callback(null, completableColumns);
                 }
             }
         });
