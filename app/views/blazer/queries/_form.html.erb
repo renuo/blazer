@@ -182,7 +182,7 @@
           minLines: 10
         });
 
-        const tableNames = JSON.parse("<%== escape_javascript blazer_table_name_completion_source %>");
+        const tableNames = JSON.parse("<%== j blazer_table_name_completion_source %>");
         editor.completers.push({
             getCompletions: function(editor, session, pos, prefix, callback) {
                 callback(null, tableNames);
