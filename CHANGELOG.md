@@ -1,3 +1,7 @@
+## 4.0.0 (renuo only)
+
+- You need to add a new column: `add_column :blazer_queries, :gpt_prompt, :text`
+ 
 ## 3.2.1 (unreleased)
 
 - Fixed leading zeros in variables
