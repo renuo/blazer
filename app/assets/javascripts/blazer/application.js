@@ -20,6 +20,8 @@
 //= require ./vue.global.prod
 //= require ./routes
 //= require ./queries
+//= require ./prompts
+//= require ./query-form
 //= require ./fuzzysearch
 //= require ./textFit
 

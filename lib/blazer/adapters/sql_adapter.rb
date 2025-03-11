@@ -99,15 +99,36 @@ module Blazer
         end
       end
 
+      # table_schema, table_name, column_name, data_type, ordinal_position, column_comment
       def schema
         sql =
           if sqlite?
-            "SELECT NULL, t.name, c.name, c.type, c.cid FROM sqlite_master t INNER JOIN pragma_table_info(t.name) c WHERE t.type IN ('table', 'view')"
+            "SELECT NULL, t.name, c.name, c.type, c.cid, NULL FROM sqlite_master t INNER JOIN pragma_table_info(t.name) c WHERE t.type IN ('table', 'view')"
+            elsif postgresql? # patched to see also views and materialized views
+              "SELECT  n.nspname AS table_schema,
+                       c.relname AS table_name,
+                       a.attname AS column_name,
+                       pg_catalog.format_type(a.atttypid, a.atttypmod) AS data_type,
+                       a.attnum AS ordinal_position,
+                       pg_catalog.col_description(c.oid, a.attnum) AS column_comment
+                FROM pg_catalog.pg_attribute a
+                JOIN pg_catalog.pg_class c
+                       ON a.attrelid = c.oid
+                JOIN pg_catalog.pg_namespace n
+                       ON c.relnamespace = n.oid
+                WHERE c.relkind IN ('r', 'v', 'm')  -- (table, view, materialized view)
+                  AND a.attnum > 0
+                  AND NOT a.attisdropped
+                  AND n.nspname NOT IN ('pg_catalog', 'information_schema')
+                ORDER BY table_schema, table_name, ordinal_position"
           else
-            add_schemas("SELECT table_schema, table_name, column_name, data_type, ordinal_position FROM information_schema.columns")
+            add_schemas("SELECT table_schema, table_name, column_name, data_type, ordinal_position, NULL FROM information_schema.columns")
           end
         result = data_source.run_statement(sql)
-        result.rows.group_by { |r| [r[0], r[1]] }.map { |k, vs| {schema: k[0], table: k[1], columns: vs.sort_by { |v| v[2] }.map { |v| {name: v[2], data_type: v[3]} }} }.sort_by { |t| [t[:schema] == default_schema ? "" : t[:schema], t[:table]] }
+        result.rows
+              .group_by { |r| [r[0], r[1]] }
+              .map { |k, vs| {schema: k[0], table: k[1], columns: vs.sort_by { |v| [v[2], v[4]] }.map { |v| {name: v[2], data_type: v[3], comment: v[5]} }} }
+              .sort_by { |t| [t[:schema] == default_schema ? "" : t[:schema], t[:table]] }
       end
 
       def preview_statement
