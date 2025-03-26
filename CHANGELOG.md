@@ -1,6 +1,8 @@
 ## 4.0.0 (renuo only)
 
+# GPT queries generator
 - You need to add a new column: `add_column :blazer_queries, :gpt_prompt, :text`
+- You can activate GPT prompt by adding `gem "ruby-openai"` and setting and `OPENAI_API_KEY` key.
  
 ## 3.2.1 (unreleased)
 
