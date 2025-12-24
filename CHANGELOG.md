@@ -1,3 +1,7 @@
+## 4.1.0 (renuo only)
+
+- Added missing nonce.
+
 ## 4.0.0 (renuo only)
 
 # GPT queries generator

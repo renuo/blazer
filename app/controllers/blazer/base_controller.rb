@@ -6,6 +6,9 @@ module Blazer
     skip_after_action(*filters, raise: false)
     skip_around_action(*filters, raise: false)
 
+    content_security_policy false
+
+
     clear_helpers
 
     if ENV["BLAZER_PASSWORD"]
