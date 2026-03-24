@@ -1,6 +1,6 @@
 module Blazer
   class ChecksController < BaseController
-    before_action :set_check, only: [:edit, :update, :destroy, :run]
+    before_action :set_check, only: [:edit, :update, :destroy, :run, :pause, :unpause]
     def edit
     end
     def index
@@ -42,6 +42,16 @@ module Blazer
     def run
       @query = @check.query
       redirect_to query_path(@query)
+    end
+
+    def pause
+      @check.update!(paused_at: Time.now)
+      redirect_to checks_path
+    end
+
+    def unpause
+      @check.update!(paused_at: nil)
+      redirect_to checks_path
     end
 
     private

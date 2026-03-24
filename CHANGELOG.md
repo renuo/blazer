@@ -1,3 +1,14 @@
+## 4.2.0 (renuo only)
+
+- Added ability to pause checks
+
+To upgrade, run:
+
+```sh
+rails generate blazer:upgrade
+rails db:migrate
+```
+
 ## 4.1.0 (renuo only)
 
 - Added missing nonce.

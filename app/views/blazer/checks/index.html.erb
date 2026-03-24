@@ -37,7 +37,9 @@
       <tr>
         <td><%= link_to check.query.name, check.query %> <span class="text-muted"><%= check.try(:check_type).to_s.gsub("_", " ") %></span></td>
         <td>
-          <% if check.state %>
+          <% if check.paused? %>
+            <small class="check-state paused">PAUSED</small>
+          <% elsif check.state %>
             <small class="check-state <%= check.state.parameterize.gsub("-", "_") %>"><%= check.state.upcase %></small>
           <% end %>
         </td>
@@ -54,7 +56,12 @@
         </td>
         <td style="text-align: right; padding: 1px;">
           <%= link_to "Edit", edit_check_path(check), class: "btn btn-info" %>
-          <%= button_to "Run Now", refresh_query_path(check.query), class: "btn btn-primary" %>
+          <% if check.paused? %>
+            <%= button_to "Resume", unpause_check_path(check), class: "btn btn-warning" %>
+          <% else %>
+            <%= button_to "Pause", pause_check_path(check), class: "btn btn-secondary" %>
+            <%= button_to "Run Now", refresh_query_path(check.query), class: "btn btn-primary" %>
+          <% end %>
         </td>
       </tr>
     <% end %>

@@ -143,6 +143,10 @@ input.search:focus {
   color: #000;
 }
 
+.check-state.paused {
+  color: #888;
+}
+
 .glyphicon-remove {
   cursor: pointer;
   color: #d9534f;

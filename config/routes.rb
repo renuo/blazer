@@ -14,6 +14,8 @@ Blazer::Engine.routes.draw do
 
   resources :checks, except: [:show] do
     get :run, on: :member
+    post :pause, on: :member
+    post :unpause, on: :member
   end
 
   resources :dashboards, except: [:index] do

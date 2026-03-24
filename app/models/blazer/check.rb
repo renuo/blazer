@@ -10,6 +10,10 @@ module Blazer
     before_validation :set_state
     before_validation :fix_emails
 
+    def paused?
+      respond_to?(:paused_at) && paused_at.present?
+    end
+
     def split_emails
       emails.to_s.downcase.split(",").map(&:strip)
     end

@@ -83,6 +83,25 @@ class ChecksTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_paused_check_is_not_run
+    query = create_query
+    check = create_check(query: query, check_type: "bad_data", paused_at: Time.now)
+
+    Blazer.run_checks(schedule: "5 minutes")
+    check.reload
+    assert_equal "new", check.state
+  end
+
+  def test_unpaused_check_is_run
+    query = create_query
+    check = create_check(query: query, check_type: "bad_data", paused_at: Time.now)
+
+    check.update!(paused_at: nil)
+    Blazer.run_checks(schedule: "5 minutes")
+    check.reload
+    assert_equal "failing", check.state
+  end
+
   def assert_slack_messages(expected)
     count = 0
     stub_method(Blazer::SlackNotifier, :post_api, ->(*) { count += 1 }) do
