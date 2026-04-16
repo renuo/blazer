@@ -44,6 +44,18 @@
     </div>
   <% end %>
 
+  <% if @check.respond_to?(:minimum_value) && @check.respond_to?(:check_type) && Blazer.anomaly_checks %>
+    <div class="form-group" id="minimum-value-field" style="display: <%= @check.check_type == "anomaly" ? "block" : "none" %>;">
+      <%= f.label :minimum_value, "Minimum value" %>
+      <%= f.number_field :minimum_value, step: :any, placeholder: "Optional, only alert if most recent value is above this", class: "form-control" %>
+    </div>
+    <%= javascript_tag nonce: true do %>
+      document.getElementById("check_check_type").addEventListener("change", function() {
+        document.getElementById("minimum-value-field").style.display = this.value === "anomaly" ? "block" : "none";
+      });
+    <% end %>
+  <% end %>
+
   <% if @check.respond_to?(:schedule) && Blazer.check_schedules %>
     <div class="form-group">
       <%= f.label :schedule, "Run every" %>

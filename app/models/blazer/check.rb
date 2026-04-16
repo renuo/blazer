@@ -48,7 +48,11 @@ module Blazer
           if anomaly.nil?
             "error"
           elsif anomaly
-            "failing"
+            if respond_to?(:minimum_value) && minimum_value.present? && result.most_recent_value.present?
+              result.most_recent_value >= minimum_value ? "failing" : "passing"
+            else
+              "failing"
+            end
           else
             "passing"
           end

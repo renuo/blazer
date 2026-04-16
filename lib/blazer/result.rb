@@ -168,6 +168,21 @@ module Blazer
       [anomaly, message]
     end
 
+    def most_recent_value
+      return nil if rows.empty?
+
+      if chart_type == "line"
+        sorted = rows.sort_by { |r| r[0] || Time.at(0) }
+        values = sorted.last[1..-1].compact
+        values.max
+      elsif chart_type == "line2"
+        rows.group_by { |r| r[1] }.map { |_, group|
+          sorted = group.sort_by { |r| r[0] || Time.at(0) }
+          sorted.last[2]
+        }.compact.max
+      end
+    end
+
     def anomaly?(series)
       series = series.reject { |v| v[0].nil? }.sort_by { |v| v[0] }
 
