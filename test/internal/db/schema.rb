@@ -20,6 +20,7 @@ ActiveRecord::Schema.define do
   create_table :blazer_dashboards do |t|
     t.references :creator
     t.string :name
+    t.text :positions
     t.timestamps null: false
   end
 

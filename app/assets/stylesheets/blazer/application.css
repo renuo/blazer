@@ -4,6 +4,7 @@
  *= require ./tom-select
  *= require ./github
  *= require ./daterangepicker
+ *= require ./gridstack
  *= require_self
  */
 
@@ -357,4 +358,20 @@ h2 {
 
 .hljs-variable {
   font-weight: normal;
+}
+
+.grid-stack {
+  background: #efefed;
+  margin: 10px;
+}
+
+.grid-stack-item-content {
+  color: #2c3e50;
+  text-align: center;
+  background-color: white;
+}
+
+.single-value {
+  width: 100%;
+  height: 100%;
 }

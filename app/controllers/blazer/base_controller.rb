@@ -34,6 +34,18 @@ module Blazer
 
     private
 
+    # the positions of the queries in the dashboard grid, new queries are added at the top left
+    def load_dashboard_positions(dashboard, queries)
+      positions = dashboard.positions.present? ? JSON.parse(dashboard.positions) : []
+      query_ids = queries.map(&:id)
+      positions.select! { |position| query_ids.include?(position["id"].to_i) }
+      known_ids = positions.map { |position| position["id"].to_i }
+      queries.each do |query|
+        positions << {"id" => query.id, "x" => 0, "y" => 0, "w" => 2, "h" => 2} unless known_ids.include?(query.id)
+      end
+      positions
+    end
+
     def process_vars(statement, var_params = nil)
       var_params ||= request.query_parameters
       (@bind_vars ||= []).concat(statement.variables).uniq!

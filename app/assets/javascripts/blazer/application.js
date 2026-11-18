@@ -13,6 +13,9 @@
 //= require ./routes
 //= require ./queries
 //= require ./fuzzysearch
+//= require ./gridstack-all
+//= require ./gs_dashboards
+//= require ./textFit
 
 hljs.getLanguage("sql").contains.push({scope: "variable", match: /\{\w+\}/})
 

@@ -38,16 +38,25 @@ module Blazer
       end
 
       add_cohort_analysis_vars if @queries.any?(&:cohort_analysis?)
+      @dashboard_positions = load_dashboard_positions(@dashboard, @queries) if @dashboard.respond_to?(:positions)
     end
 
     def edit
     end
 
     def update
-      if update_dashboard(@dashboard)
-        redirect_to dashboard_path(@dashboard, params: variable_params(@dashboard))
-      else
-        render_errors @dashboard
+      saved = update_dashboard(@dashboard)
+      respond_to do |format|
+        format.html do
+          if saved
+            redirect_to dashboard_path(@dashboard, params: variable_params(@dashboard))
+          else
+            render_errors @dashboard
+          end
+        end
+        format.json do
+          render json: {success: saved, errors: @dashboard.errors}
+        end
       end
     end
 
@@ -66,7 +75,9 @@ module Blazer
     private
 
     def dashboard_params
-      params.require(:dashboard).permit(:name)
+      permitted = [:name]
+      permitted << :positions if @dashboard.respond_to?(:positions)
+      params.require(:dashboard).permit(*permitted)
     end
 
     def set_dashboard
