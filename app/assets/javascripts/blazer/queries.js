@@ -67,6 +67,20 @@ function runQueryHelper(query) {
   query.controller = controller
 }
 
+function runPrompt(data, success, error) {
+  fetch(Routes.run_prompts_path(), {method: "POST", body: createFormData(csrfProtect(data))})
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error(response.statusText || `An error occurred: ${response.status}`)
+      }
+      return response.text()
+    })
+    .then(success)
+    .catch(function (e) {
+      error(e.message)
+    })
+}
+
 function queryComplete(query) {
   const index = runningQueries.indexOf(query)
   runningQueries.splice(index, 1)

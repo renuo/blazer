@@ -8,6 +8,16 @@
   <%= form_for @query, url: (@query.persisted? ? query_path(@query, params: @variable_params) : queries_path(params: @variable_params)), html: {autocomplete: "off"} do |f| %>
     <div class="row">
       <div id="statement-box" class="col-xs-8">
+        <% if gpt?(@query) %>
+          <div class="form-group">
+            <%= f.label :gpt_prompt %>
+            <%= f.text_area :gpt_prompt, class: "form-control", id: "prompt-editor" %>
+          </div>
+          <div class="form-group text-right">
+            <a id="run-prompt-button" class="btn btn-info" style="vertical-align: top; width: 140px;">Run Prompt</a>
+            <a id="cancel-prompt-button" class="btn btn-danger hide" style="vertical-align: top; width: 140px;">Cancel</a>
+          </div>
+        <% end %>
         <div class="form-group">
           <%= f.hidden_field :statement %>
           <div id="editor-container">
@@ -70,6 +80,8 @@
 
 <%= javascript_tag nonce: true do %>
   <%= blazer_js_var "variableParams", @variable_params %>
+  <%= blazer_js_var "completions", blazer_table_name_completion_source(@query.data_source ? Blazer.data_sources[@query.data_source] : Blazer.data_sources.values.first) %>
+  <%= blazer_js_var "completionDataSource", (@query.data_source || Blazer.data_sources.keys.first) %>
   <%= blazer_js_var "previewStatement", Blazer.data_sources.to_h { |k, v| [k, (v.preview_statement rescue "")] } %>
 
   const app = document.getElementById("app")
@@ -157,6 +169,12 @@
     }, tablesXhr)
   }
 
+  // the table in front of a column being typed, like users in "users.na"
+  function tableNameBeforeDot(line, column) {
+    const match = line.slice(0, column).match(/([\w"]+)\.$/)
+    return match ? match[1].replace(/"/g, "") : null
+  }
+
   function adjustHeight() {
     // https://stackoverflow.com/questions/11584061/
     let lines = editor.getSession().getScreenLength()
@@ -173,12 +191,26 @@
     editor.setTheme("ace/theme/twilight")
     editor.getSession().setMode("ace/mode/sql")
     editor.setOptions({
-      enableBasicAutocompletion: false,
+      enableBasicAutocompletion: true,
       enableSnippets: false,
-      enableLiveAutocompletion: false,
+      enableLiveAutocompletion: true,
       highlightActiveLine: false,
       fontSize: 12,
       minLines: 10
+    })
+    editor.completers.push({
+      getCompletions: function (editor, session, pos, prefix, callback) {
+        callback(null, dsSelect.value === completionDataSource ? completions : [])
+      }
+    })
+    editor.completers.push({
+      getCompletions: function (editor, session, pos, prefix, callback) {
+        const tableName = tableNameBeforeDot(editor.getSession().getLine(pos.row), pos.column - prefix.length)
+        const table = dsSelect.value === completionDataSource && completions.find(function (entry) {
+          return entry.value === tableName
+        })
+        callback(null, table ? table.columns : [])
+      }
     })
     editor.renderer.setShowGutter(true)
     editor.renderer.setPrintMarginColumn(false)
@@ -203,7 +235,41 @@
     editor.focus()
   }
 
+  function generateSQL(e) {
+    const promptEditor = document.getElementById("prompt-editor")
+    const runPromptButton = document.getElementById("run-prompt-button")
+    const cancelPromptButton = document.getElementById("cancel-prompt-button")
+    let canceled = false
+
+    function stopPrompt() {
+      hide(cancelPromptButton)
+      show(runPromptButton)
+    }
+
+    hide(runPromptButton)
+    show(cancelPromptButton)
+    cancelPromptButton.onclick = function () {
+      canceled = true
+      stopPrompt()
+    }
+
+    runPrompt({prompt: promptEditor.value, data_source: dsSelect.value}, function (sql) {
+      if (!canceled) {
+        stopPrompt()
+        editor.setValue(sql, 1)
+      }
+    }, function (message) {
+      if (!canceled) {
+        stopPrompt()
+        results.classList.add("query-error")
+        results.textContent = message
+        show(results)
+      }
+    })
+  }
+
   runButton.addEventListener("click", run)
+  document.getElementById("run-prompt-button")?.addEventListener("click", generateSQL)
   cancelButton.addEventListener("click", cancel)
 
   new TomSelect(tableSelect, {

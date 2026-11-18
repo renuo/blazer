@@ -1,3 +1,46 @@
+## 5.0.0 (renuo only)
+
+Merged the upstream version 3.5.2, which includes the fix for the stored XSS vulnerability
+([GHSA-m5f6-4589-m89f](https://github.com/ankane/blazer/security/advisories/GHSA-m5f6-4589-m89f)).
+
+- The UI and the assets come from upstream again: Bootstrap 3 styles, no jQuery, Vue, Selectize and Bootstrap 5 anymore.
+  Propshaft is supported natively, so layout overrides and the `bootstrap` and `popper_js` gems for Blazer
+  are not needed anymore.
+- Removed the `chart_library` setting
+- Dashboards have a grid layout again (gridstack is bundled instead of loaded from a CDN)
+- Added a minimum value for anomaly checks and the ability to pause checks
+- Added `timepicker_ranges` and the SQL generator with OpenAI again. The SQL is validated with the Blazer data source
+  (in a transaction with a timeout) and not with the database of the app.
+- Autocompletion for tables and columns in the SQL editor
+
+To upgrade, run:
+
+```sh
+rails generate blazer:upgrade
+rails db:migrate
+```
+
+## 4.2.0 (renuo only)
+
+- Added ability to pause checks
+
+To upgrade, run:
+
+```sh
+rails generate blazer:upgrade
+rails db:migrate
+```
+
+## 4.1.0 (renuo only)
+
+- Added missing nonce.
+
+## 4.0.0 (renuo only)
+
+# GPT queries generator
+- You need to add a new column: `add_column :blazer_queries, :gpt_prompt, :text`
+- You can activate GPT prompt by adding `gem "ruby-openai"` and setting and `OPENAI_API_KEY` key.
+
 ## 3.5.3 (unreleased)
 
 - Fixed syntax highlighting for queries with variables

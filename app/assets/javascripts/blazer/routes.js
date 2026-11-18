@@ -2,6 +2,9 @@ var Routes = {
   run_queries_path: function () {
     return rootPath + "queries/run"
   },
+  run_prompts_path: function () {
+    return rootPath + "prompts/run"
+  },
   cancel_queries_path: function () {
     return rootPath + "queries/cancel"
   },

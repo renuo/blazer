@@ -374,7 +374,9 @@ module Blazer
     end
 
     def query_params
-      params.require(:query).permit(:name, :description, :statement, :data_source)
+      permitted = [:name, :description, :statement, :data_source]
+      permitted << :gpt_prompt if Blazer::Query.column_names.include?("gpt_prompt")
+      params.require(:query).permit(*permitted)
     end
 
     def blazer_params

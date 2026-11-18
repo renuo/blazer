@@ -1,5 +1,42 @@
 # Blazer
 
+## Renuo version
+
+This is the renuo fork of [Blazer](https://github.com/ankane/blazer). See [CHANGELOG.md](CHANGELOG.md) for the
+differences from the original version, they are documented below.
+
+### Time ranges
+
+You can customize the time ranges of the time range picker:
+
+```yml
+timepicker_ranges:
+  - ["Today", 0, 0]
+  - ["Last 7 Days", 6, 0]
+  - ["Last 30 Days", 29, 0]
+```
+
+### Dashboards
+
+The queries of a dashboard are shown in a grid. The grid is saved in the `positions` column of the dashboards.
+
+### Checks
+
+Checks can be paused and resumed. Anomaly checks have an optional minimum value, they only fail
+if the most recent value is at least that high.
+
+For existing installations, run:
+
+```sh
+rails generate blazer:upgrade
+rails db:migrate
+```
+
+### SQL generation with OpenAI
+
+Add `gem "ruby-openai"` to your Gemfile and set the `OPENAI_API_KEY` environment variable to generate SQL queries
+from a prompt. OpenAI never sees the data of your database, but the schema of it, including the column comments.
+
 Explore your data with SQL. Easily create charts and dashboards, and share them with your team.
 
 [Try it out](https://blazer.dokkuapp.com)
