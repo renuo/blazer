@@ -87,6 +87,7 @@
         const startTime = document.getElementById("start_time")
         const endTime = document.getElementById("end_time")
         const reportrange = document.getElementById("reportrange")
+        <%= blazer_js_var "timepickerRanges", Blazer.timepicker_ranges %>
 
         function dateStr(daysAgo) {
           return now.clone().subtract(daysAgo || 0, "days").format(format)
@@ -104,11 +105,11 @@
 
         const picker = new DateRangePicker(reportrange,
           {
-            ranges: {
-             "Today": [dateStr(), dateStr()],
-             "Last 7 Days": [dateStr(6), dateStr()],
-             "Last 30 Days": [dateStr(29), dateStr()]
-            },
+            ranges: Object.fromEntries(
+              timepickerRanges.map(function (range) {
+                return [range[0], [dateStr(range[1]), dateStr(range[2])]]
+              })
+            ),
             locale: {
               format: format
             },

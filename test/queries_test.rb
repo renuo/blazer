@@ -151,6 +151,15 @@ class QueriesTest < ActionDispatch::IntegrationTest
     assert_match "daterangepicker", response.body
   end
 
+  def test_variables_time_range_custom_ranges
+    query = create_query(statement: "SELECT {start_time}, {end_time}")
+    stub_method(Blazer, :timepicker_ranges, [["Yesterday", 1, 1]]) do
+      get blazer.query_path(query)
+    end
+    assert_response :success
+    assert_match %!const timepickerRanges = [["Yesterday",1,1]];!, response.body
+  end
+
   def test_variable_defaults
     query = create_query(statement: "SELECT {default_var}")
     get blazer.query_path(query)

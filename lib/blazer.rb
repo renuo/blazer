@@ -139,6 +139,10 @@ module Blazer
     end
   end
 
+  def self.timepicker_ranges
+    settings["timepicker_ranges"] || [["Today", 0, 0], ["Last 7 Days", 6, 0], ["Last 30 Days", 29, 0]]
+  end
+
   def self.run_checks(schedule: nil)
     checks = Blazer::Check.includes(:query)
     checks = checks.where(schedule: schedule) if schedule
