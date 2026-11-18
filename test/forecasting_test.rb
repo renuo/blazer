@@ -2,6 +2,7 @@ require_relative "test_helper"
 
 class ForecastingTest < ActionDispatch::IntegrationTest
   def setup
+    super
     Blazer::Query.delete_all
   end
 
@@ -16,6 +17,8 @@ class ForecastingTest < ActionDispatch::IntegrationTest
 
     assert_forecast("trend")
   end
+
+  private
 
   def assert_forecast(forecasting)
     skip unless postgresql?

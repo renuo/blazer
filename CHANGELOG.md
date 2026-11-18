@@ -1,23 +1,28 @@
-## 4.2.0 (renuo only)
+## 3.5.3 (unreleased)
 
-- Added ability to pause checks
+- Fixed syntax highlighting for queries with variables
 
-To upgrade, run:
+## 3.5.2 (2026-09-24)
 
-```sh
-rails generate blazer:upgrade
-rails db:migrate
-```
+- Fixed error message when status text not available
 
-## 4.1.0 (renuo only)
+## 3.5.1 (2026-07-31)
 
-- Added missing nonce.
+- Fixed delete buttons
+- Fixed table preview and schema page for Postgres < 16
+- Fixed error with Sass
 
-## 4.0.0 (renuo only)
+## 3.5.0 (2026-07-27)
 
-# GPT queries generator
-- You need to add a new column: `add_column :blazer_queries, :gpt_prompt, :text`
-- You can activate GPT prompt by adding `gem "ruby-openai"` and setting and `OPENAI_API_KEY` key.
+- Fixed stored XSS vulnerability - [more info](https://github.com/ankane/blazer/security/advisories/GHSA-m5f6-4589-m89f)
+- Added materialized views to table preview and schema page for Postgres
+- Added support for ClickHouse
+- Added `catalog` setting for Amazon Athena
+- Improved support for Snowflake
+
+## 3.4.0 (2026-04-20)
+
+- Dropped support for Ruby < 3.3 and Rails < 7.2
 
 ## 3.3.0 (2025-04-12)
 
@@ -159,7 +164,6 @@ rails db:migrate
 ## 2.3.1 (2020-11-23)
 
 - Improved column names for uploads
-- Allow to configure time range selector preset ranges
 
 ## 2.3.0 (2020-11-16)
 

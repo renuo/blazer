@@ -14,8 +14,4 @@
 *.log
 *.sqlite
 /test/internal/tmp
-mkmf.log
-*~
-*.swp
-*.swo
 *.lock

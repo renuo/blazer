@@ -2,14 +2,14 @@
   <% var_params = request.query_parameters %>
   <%= javascript_tag nonce: true do %>
     <%= blazer_js_var "timeZone", Blazer.time_zone.tzinfo.name %>
-    var now = moment.tz(timeZone)
-    var format = "YYYY-MM-DD"
+    const now = moment.tz(timeZone)
+    const format = "YYYY-MM-DD"
 
     function toDate(time) {
       return moment.tz(time.format(format), timeZone)
     }
   <% end %>
-  <form id="bind" method="get" action="<%= action %>" class="form-inline" style="margin-bottom: 15px;">
+  <%= tag.form id: "bind", method: "get", action: action, class: "form-inline", style: "margin-bottom: 15px;" do %>
     <% date_vars = ["start_time", "end_time"] %>
     <% if (date_vars - @bind_vars).empty? %>
       <% @bind_vars = @bind_vars - date_vars %>
@@ -22,44 +22,52 @@
       <% if (data = @smart_vars[var]) %>
         <%= select_tag var, options_for_select([[nil, nil]] + data, selected: var_params[var]), style: "margin-right: 20px; width: 200px; display: none;" %>
         <%= javascript_tag nonce: true do %>
-          $("#<%= var %>").selectize({
-            create: true
-          });
+          (function () {
+            <%= blazer_js_var "varId", var %>
+            new TomSelect(document.getElementById(varId), {
+              create: true,
+              onChange: function () {
+                submitIfCompleted(this.input.closest("form"))
+                this.blur()
+              }
+            })
+          })()
         <% end %>
       <% elsif var.end_with?("_at") || var == "start_time" || var == "end_time" %>
         <%= hidden_field_tag var, var_params[var] %>
 
-        <div class="selectize-control single" style="width: 200px;">
-          <div id="<%= var %>-select" class="selectize-input" style="display: inline-block;">
-            <span>Select a date</span>
-          </div>
+        <div class="ts-wrapper single" style="width: 200px;">
+          <%= tag.div id: "#{var}-select", class: "ts-control" do %>
+            <div class="item">Select a date</div>
+          <% end %>
         </div>
 
         <%= javascript_tag nonce: true do %>
-          (function() {
-            var input = $("#<%= var %>")
-            var datePicker = $("#<%= var %>-select")
-            datePicker.daterangepicker({
+          (function () {
+            <%= blazer_js_var "varId", var %>
+            <%= blazer_js_var "selectId", "#{var}-select" %>
+            const input = document.getElementById(varId)
+            const datePicker = document.getElementById(selectId)
+            const picker = new DateRangePicker(datePicker, {
               singleDatePicker: true,
               locale: {format: format},
               autoUpdateInput: false,
               autoApply: true,
-              startDate: input.val().length > 0 ? moment.tz(input.val(), timeZone) : now
+              startDate: input.value.length > 0 ? moment.tz(input.value, timeZone) : now
             })
             // hack to start with empty date
-            datePicker.on("apply.daterangepicker", function(ev, picker) {
-              datePicker.find("span").html(toDate(picker.startDate).format("MMMM D, YYYY"))
-              input.val(toDate(picker.startDate).utc().format())
-              submitIfCompleted($("#<%= var %>").closest("form"))
+            datePicker.addEventListener("apply.daterangepicker", function () {
+              datePicker.querySelector(".item").textContent = toDate(picker.startDate).format("MMMM D, YYYY")
+              input.value = toDate(picker.startDate).utc().format()
+              submitIfCompleted(input.closest("form"))
             })
-            if (input.val().length > 0) {
-              var picker = datePicker.data("daterangepicker")
-              datePicker.find("span").html(toDate(picker.startDate).format("MMMM D, YYYY"))
+            if (input.value.length > 0) {
+              datePicker.querySelector(".item").textContent = toDate(picker.startDate).format("MMMM D, YYYY")
             }
           })()
         <% end %>
       <% else %>
-        <%= text_field_tag var, var_params[var], style: "width: 120px; margin-right: 20px;", autofocus: i == 0 && !var.end_with?("_at") && !var_params[var], class: "form-control" %>
+        <%= text_field_tag var, var_params[var], style: "width: 120px; margin-left: 5px; margin-right: 20px;", autofocus: i == 0 && !var.end_with?("_at") && !var_params[var], class: "form-control" %>
       <% end %>
     <% end %>
 
@@ -69,30 +77,38 @@
       <% end %>
 
       <%= label_tag nil, date_vars.join(" & ") %>
-      <div class="selectize-control single" style="width: 300px;">
-        <div id="reportrange" class="selectize-input" style="display: inline-block;">
-          <span>Select a time range</span>
+      <div class="ts-wrapper single" style="width: 300px;">
+        <div class="ts-control" id="reportrange">
+          <div class="item">Select a time range</div>
         </div>
       </div>
 
       <%= javascript_tag nonce: true do %>
+        const startTime = document.getElementById("start_time")
+        const endTime = document.getElementById("end_time")
+        const reportrange = document.getElementById("reportrange")
+
         function dateStr(daysAgo) {
           return now.clone().subtract(daysAgo || 0, "days").format(format)
         }
 
         function setTimeInputs(start, end) {
-          $("#start_time").val(toDate(start).utc().format())
-          $("#end_time").val(toDate(end).endOf("day").utc().format())
+          startTime.value = toDate(start).utc().format()
+          endTime.value = toDate(end).endOf("day").utc().format()
         }
 
-        var datepickerRanges = <%=raw Blazer.timepicker_ranges %>;
+        function applyDateRangePicker(picker) {
+          setTimeInputs(picker.startDate, picker.endDate)
+          reportrange.querySelector(".item").textContent = toDate(picker.startDate).format("MMMM D, YYYY") + " - " + toDate(picker.endDate).format("MMMM D, YYYY")
+        }
 
-        $("#reportrange").daterangepicker(
+        const picker = new DateRangePicker(reportrange,
           {
-            ranges: datepickerRanges.reduce(function(map, range) {
-              map[range[0]] = [dateStr(range[1]), dateStr(range[2])];
-              return map;
-            }, {}),
+            ranges: {
+             "Today": [dateStr(), dateStr()],
+             "Last 7 Days": [dateStr(6), dateStr()],
+             "Last 30 Days": [dateStr(29), dateStr()]
+            },
             locale: {
               format: format
             },
@@ -101,28 +117,26 @@
             opens: "right",
             alwaysShowCalendars: true
           },
-          function(start, end) {
+          function (start, end) {
             setTimeInputs(start, end)
-            submitIfCompleted($("#start_time").closest("form"))
+            submitIfCompleted(startTime.closest("form"))
           }
-        ).on("apply.daterangepicker", function(ev, picker) {
-          setTimeInputs(picker.startDate, picker.endDate)
-          $("#reportrange span").html(toDate(picker.startDate).format("MMMM D, YYYY") + " - " + toDate(picker.endDate).format("MMMM D, YYYY"))
+        )
+        reportrange.addEventListener("apply.daterangepicker", function () {
+          applyDateRangePicker(picker)
         })
 
-        if ($("#start_time").val().length > 0) {
-          var picker = $("#reportrange").data("daterangepicker")
-          picker.setStartDate(moment.tz($("#start_time").val(), timeZone))
-          picker.setEndDate(moment.tz($("#end_time").val(), timeZone))
-          $("#reportrange").trigger("apply.daterangepicker", picker)
+        if (startTime.value.length > 0) {
+          picker.setStartDate(moment.tz(startTime.value, timeZone))
+          picker.setEndDate(moment.tz(endTime.value, timeZone))
+          applyDateRangePicker(picker)
         } else {
-          var picker = $("#reportrange").data("daterangepicker")
-          $("#reportrange").trigger("apply.daterangepicker", picker)
-          submitIfCompleted($("#start_time").closest("form"))
+          applyDateRangePicker(picker)
+          submitIfCompleted(startTime.closest("form"))
         }
       <% end %>
     <% end %>
 
     <input type="submit" class="btn btn-success" value="Run" style="vertical-align: top;" />
-  </form>
+  <% end %>
 <% end %>

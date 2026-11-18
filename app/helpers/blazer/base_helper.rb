@@ -1,7 +1,5 @@
 module Blazer
   module BaseHelper
-    include CompletionHelper
-
     def blazer_title(title = nil)
       if title
         content_for(:title) { title }
@@ -31,7 +29,7 @@ module Blazer
     end
 
     def blazer_js_var(name, value)
-      "var #{name} = #{json_escape(value.to_json(root: false))};".html_safe
+      "const #{name} = #{json_escape(value.to_json(root: false))};".html_safe
     end
 
     def blazer_series_name(k)

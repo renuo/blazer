@@ -1,9 +1,8 @@
 # dependencies
-require "chartkick"
+require "csv"
 require "safely/core"
 
 # stdlib
-require "csv"
 require "digest/sha2"
 require "json"
 require "yaml"
@@ -21,6 +20,7 @@ require_relative "blazer/adapters/base_adapter"
 require_relative "blazer/adapters/athena_adapter"
 require_relative "blazer/adapters/bigquery_adapter"
 require_relative "blazer/adapters/cassandra_adapter"
+require_relative "blazer/adapters/clickhouse_adapter"
 require_relative "blazer/adapters/drill_adapter"
 require_relative "blazer/adapters/druid_adapter"
 require_relative "blazer/adapters/elasticsearch_adapter"
@@ -35,6 +35,11 @@ require_relative "blazer/adapters/soda_adapter"
 require_relative "blazer/adapters/spark_adapter"
 require_relative "blazer/adapters/sql_adapter"
 require_relative "blazer/adapters/snowflake_adapter"
+require_relative "blazer/adapters/snowflake2_adapter"
+
+# notifiers
+require_relative "blazer/email_notifier"
+require_relative "blazer/slack_notifier"
 
 # engine
 require_relative "blazer/engine"
@@ -46,11 +51,8 @@ module Blazer
 
   # actionmailer optional
   autoload :CheckMailer, "blazer/check_mailer"
-  # net/http optional
-  autoload :SlackNotifier, "blazer/slack_notifier"
   # activejob optional
   autoload :RunStatementJob, "blazer/run_statement_job"
-  autoload :RunPromptJob, "blazer/run_prompt_job"
 
   class << self
     attr_accessor :audit
@@ -84,6 +86,8 @@ module Blazer
 
   VARIABLE_MESSAGE = "Variable cannot be used in this position"
   TIMEOUT_MESSAGE = "Query timed out :("
+
+  # TODO move to SqlAdapter
   TIMEOUT_ERRORS = [
     "canceling statement due to statement timeout", # postgres
     "canceling statement due to conflict with recovery", # postgres
@@ -135,26 +139,11 @@ module Blazer
     end
   end
 
-  def self.timepicker_ranges
-    settings["timepicker_ranges"] || [["Today", 0, 0], ["Last 7 Days", 6, 0], ["Last 30 Days", 29, 0]]
-  end
-
-  def self.chart_library
-    settings['chart_library'] || 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js'
-  end
-
-  def self.extract_vars(statement)
-    # strip commented out lines
-    # and regex {1} or {1,2}
-    statement.to_s.gsub(/\-\-.+/, "").gsub(/\/\*.+\*\//m, "").scan(/\{\w*?\}/i).map { |v| v[1...-1] }.reject { |v| /\A\d+(\,\d+)?\z/.match(v) || v.empty? }.uniq
-  end
-
   def self.run_checks(schedule: nil)
     checks = Blazer::Check.includes(:query)
     checks = checks.where(schedule: schedule) if schedule
     checks.find_each do |check|
       next if check.state == "disabled"
-      next if check.paused?
       Safely.safely { run_check(check) }
     end
   end
@@ -204,28 +193,9 @@ module Blazer
   end
 
   def self.send_failing_checks
-    emails = {}
-    slack_channels = {}
-
-    Blazer::Check.includes(:query).where(state: ["failing", "error", "timed out", "disabled"]).find_each do |check|
-      check.split_emails.each do |email|
-        (emails[email] ||= []) << check
-      end
-      check.split_slack_channels.each do |channel|
-        (slack_channels[channel] ||= []) << check
-      end
-    end
-
-    emails.each do |email, checks|
-      Safely.safely do
-        Blazer::CheckMailer.failing_checks(email, checks).deliver_now
-      end
-    end
-
-    slack_channels.each do |channel, checks|
-      Safely.safely do
-        Blazer::SlackNotifier.failing_checks(channel, checks)
-      end
+    checks = Blazer::Check.includes(:query).where(state: ["failing", "error", "timed out", "disabled"]).to_a
+    Blazer.notifiers.each do |notifier|
+      notifier.failing_checks(checks)
     end
   end
 
@@ -279,6 +249,22 @@ module Blazer
     forecasters[name] = forecaster
   end
 
+  def self.notifiers
+    @notifiers ||= []
+  end
+
+  def self.register_notifier(notifier)
+    self.notifiers << notifier
+  end
+
+  def self.check_types
+    @check_types ||= {}
+  end
+
+  def self.register_check_type(name, label, &block)
+    check_types[name] = {label: label, block: block}
+  end
+
   def self.archive_queries
     raise "Audits must be enabled to archive" unless Blazer.audit
     raise "Missing status column - see https://github.com/ankane/blazer#23" unless Blazer::Query.column_names.include?("status")
@@ -295,4 +281,8 @@ end
 
 require_relative "blazer/adapters"
 require_relative "blazer/anomaly_detectors"
+require_relative "blazer/check_types"
 require_relative "blazer/forecasters"
+
+Blazer.register_notifier Blazer::EmailNotifier
+Blazer.register_notifier Blazer::SlackNotifier

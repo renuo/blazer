@@ -1,13 +1,13 @@
-var pendingQueries = []
-var runningQueries = []
-var maxQueries = 3
+let pendingQueries = []
+const runningQueries = []
+const maxQueries = 3
 
 function runQuery(data, success, error) {
   if (!data.data_source) {
     throw new Error("Data source is required to cancel queries")
   }
   data.run_id = uuid()
-  var query = {
+  const query = {
     data: data,
     success: success,
     error: error,
@@ -22,7 +22,7 @@ function runQuery(data, success, error) {
 
 function runNext() {
   if (runningQueries.length < maxQueries) {
-    var query = pendingQueries.shift()
+    const query = pendingQueries.shift()
     if (query) {
       runningQueries.push(query)
       runQueryHelper(query)
@@ -32,99 +32,109 @@ function runNext() {
 }
 
 function runQueryHelper(query) {
-  var xhr = $.ajax({
-    url: Routes.run_queries_path(),
-    method: "POST",
-    data: query.data,
-    dataType: "html"
-  }).done( function (d) {
-    if (d[0] == "{") {
-      var response = $.parseJSON(d)
-      query.data.blazer = response
-      setTimeout( function () {
+  const formdata = createFormData(csrfProtect(query.data))
+  const controller = new AbortController()
+  fetch(Routes.run_queries_path(), {method: "POST", body: formdata, signal: controller.signal})
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error(response.statusText || `An error occurred: ${response.status}`)
+      }
+      return response.text()
+    })
+    .then(function (text) {
+      if (text[0] == "{") {
+        query.data.blazer = JSON.parse(text)
+        setTimeout(function () {
+          if (!query.canceled) {
+            runQueryHelper(query)
+          }
+        }, 1000)
+      } else {
         if (!query.canceled) {
-          runQueryHelper(query)
+          query.success(text)
         }
-      }, 1000)
-    } else {
-      if (!query.canceled) {
-        query.success(d)
+        queryComplete(query)
+      }
+    })
+    .catch(function (error) {
+      if (error.name == "AbortError") {
+        cancelServerQuery(query)
+      } else {
+        query.error(error.message)
       }
       queryComplete(query)
-    }
-  }).fail( function(jqXHR, textStatus, errorThrown) {
-    // check jqXHR.status instead of query.canceled
-    // so it works for page navigation with Firefox and Safari
-    if (jqXHR.status === 0) {
-      cancelServerQuery(query)
-    } else {
-      var message = (typeof errorThrown === "string") ? errorThrown : errorThrown.message
-      if (!message) {
-        message = "An error occurred"
-      }
-      query.error(message)
-    }
-    queryComplete(query)
-  })
-  query.xhr = xhr
-  return xhr
+    })
+  query.controller = controller
 }
 
 function queryComplete(query) {
-  var index = runningQueries.indexOf(query)
+  const index = runningQueries.indexOf(query)
   runningQueries.splice(index, 1)
   runNext()
 }
 
 function uuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8)
+  if (window.crypto && window.crypto.randomUUID) {
+    return window.crypto.randomUUID()
+  }
+
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8
     return v.toString(16)
   })
 }
 
 function cancelAllQueries() {
   pendingQueries = []
-  for (var i = 0; i < runningQueries.length; i++) {
-    cancelQuery(runningQueries[i])
+  for (const query of runningQueries) {
+    cancelQuery(query)
   }
 }
 
 // needed for Chrome
 // queries are canceled before unload with Firefox and Safari
-$(window).on("unload", cancelAllQueries)
+window.addEventListener("beforeunload", cancelAllQueries)
 
 function cancelQuery(query) {
   query.canceled = true
-  if (query.xhr) {
-    query.xhr.abort()
+  if (query.controller) {
+    query.controller.abort()
   }
+}
+
+function createFormData(params) {
+  const formdata = new FormData()
+  for (const [key, value] of Object.entries(params)) {
+    if (typeof value === "object") {
+      // handle single level of nesting
+      for (const [k, v] of Object.entries(value)) {
+        formdata.append(`${key}[${k}]`, v)
+      }
+    } else {
+      formdata.append(key, value)
+    }
+  }
+  return formdata
 }
 
 function cancelServerQuery(query) {
   // tell server
-  var path = Routes.cancel_queries_path()
-  var data = {run_id: query.run_id, data_source: query.data_source}
+  const path = Routes.cancel_queries_path()
+  const data = {run_id: query.run_id, data_source: query.data_source}
+  const formdata = createFormData(csrfProtect(data))
   if (navigator.sendBeacon) {
     // use FormData over Blob and URLSearchParams for maximum compatibility
     // Blob works with Chrome 81+ and URLSearchParams works with Chrome 88+
-    var formdata = new FormData()
-    var params = csrfProtect(data)
-    for (var key in params) {
-      if (Object.prototype.hasOwnProperty.call(params, key)) {
-        formdata.append(key, params[key])
-      }
-    }
     navigator.sendBeacon(path, formdata)
   } else {
-    // TODO make sync
-    $.post(path, data)
+    fetch(path, {method: "POST", body: formdata})
   }
 }
 
 function csrfProtect(payload) {
-  var param = $("meta[name=csrf-param]").attr("content")
-  var token = $("meta[name=csrf-token]").attr("content")
+  const param = document.querySelector("meta[name=csrf-param]")?.getAttribute("content")
+  const token = document.querySelector("meta[name=csrf-token]")?.getAttribute("content")
   if (param && token) payload[param] = token
   return payload
 }

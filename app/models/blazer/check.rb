@@ -10,56 +10,16 @@ module Blazer
     before_validation :set_state
     before_validation :fix_emails
 
-    def paused?
-      respond_to?(:paused_at) && paused_at.present?
-    end
-
-    def split_emails
-      emails.to_s.downcase.split(",").map(&:strip)
-    end
-
-    def split_slack_channels
-      if Blazer.slack?
-        slack_channels.to_s.downcase.split(",").map(&:strip)
-      else
-        []
-      end
-    end
-
     def update_state(result)
-      check_type =
-        if respond_to?(:check_type)
-          self.check_type
-        elsif respond_to?(:invert)
-          invert ? "missing_data" : "bad_data"
-        else
-          "bad_data"
-        end
+      check_type = computed_check_type
 
-      message = result.error
-
-      self.state =
+      self.state, message =
         if result.timed_out?
-          "timed out"
+          ["timed out", result.error]
         elsif result.error
-          "error"
-        elsif check_type == "anomaly"
-          anomaly, message = result.detect_anomaly
-          if anomaly.nil?
-            "error"
-          elsif anomaly
-            if respond_to?(:minimum_value) && minimum_value.present? && result.most_recent_value.present?
-              result.most_recent_value >= minimum_value ? "failing" : "passing"
-            else
-              "failing"
-            end
-          else
-            "passing"
-          end
-        elsif result.rows.any?
-          check_type == "missing_data" ? "passing" : "failing"
+          ["error", result.error]
         else
-          check_type == "missing_data" ? "failing" : "passing"
+          Blazer.check_types.fetch(check_type).fetch(:block).call(result)
         end
 
       self.last_run_at = Time.now if respond_to?(:last_run_at=)
@@ -76,37 +36,47 @@ module Blazer
 
       # do not notify on creation, except when not passing
       if (state_was != "new" || state != "passing") && state != state_was
-        Blazer::CheckMailer.state_change(self, state, state_was, result.rows.size, message, result.columns, result.rows.first(10).as_json, result.column_types, check_type).deliver_now if emails.present?
-        Blazer::SlackNotifier.state_change(self, state, state_was, result.rows.size, message, check_type)
+        Blazer.notifiers.each do |notifier|
+          notifier.state_change(check: self, state:, state_was:, result:, message:, check_type:)
+        end
       end
       save! if changed?
     end
 
+    def computed_check_type
+      if respond_to?(:check_type)
+        check_type
+      elsif respond_to?(:invert)
+        invert ? "missing_data" : "bad_data"
+      else
+        "bad_data"
+      end
+    end
+
     private
 
-      def set_state
-        self.state ||= "new"
-      end
+    def set_state
+      self.state ||= "new"
+    end
 
-      def fix_emails
-        # some people like doing ; instead of ,
-        # but we know what they mean, so let's fix it
-        # also, some people like to use whitespace
-        if emails.present?
-          self.emails = emails.strip.gsub(/[;\s]/, ",").gsub(/,+/, ", ")
-        end
+    # TODO rename
+    def fix_emails
+      Blazer.notifiers.each do |notifier|
+        notifier.before_validation(self) if notifier.respond_to?(:before_validation)
       end
+    end
 
-      def validate_emails
-        unless split_emails.all? { |e| e =~ /\A\S+@\S+\.\S+\z/ }
-          errors.add(:base, "Invalid emails")
-        end
+    # TODO rename
+    def validate_emails
+      Blazer.notifiers.each do |notifier|
+        notifier.validate(self) if notifier.respond_to?(:validate)
       end
+    end
 
-      def validate_variables
-        if query.variables.any?
-          errors.add(:base, "Query can't have variables")
-        end
+    def validate_variables
+      if query && query.variables.any?
+        errors.add(:base, "Query can't have variables")
       end
+    end
   end
 end

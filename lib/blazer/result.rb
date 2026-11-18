@@ -20,6 +20,21 @@ module Blazer
       cached_at.present?
     end
 
+    def explain
+      # TODO move to data source adapters
+      case @data_source.adapter
+      when "sql"
+        # TODO limit to Postgres and add other databases
+        if @columns == ["QUERY PLAN"]
+          @rows.map { |r| r[0] }.join("\n")
+        end
+      when "druid"
+        if @columns == ["PLAN"] && @rows.size == 1
+          @rows[0][0]
+        end
+      end
+    end
+
     def smart_values
       @smart_values ||= begin
         smart_values = {}
@@ -99,7 +114,7 @@ module Blazer
 
       # round integers
       if @rows[0][1].is_a?(Integer)
-        forecast = forecast.map { |k, v| [k, v.round] }.to_h
+        forecast = forecast.to_h { |k, v| [k, v.round] }
       end
 
       @rows.each do |row|
@@ -166,21 +181,6 @@ module Blazer
       end
 
       [anomaly, message]
-    end
-
-    def most_recent_value
-      return nil if rows.empty?
-
-      if chart_type == "line"
-        sorted = rows.sort_by { |r| r[0] || Time.at(0) }
-        values = sorted.last[1..-1].compact
-        values.max
-      elsif chart_type == "line2"
-        rows.group_by { |r| r[1] }.map { |_, group|
-          sorted = group.sort_by { |r| r[0] || Time.at(0) }
-          sorted.last[2]
-        }.compact.max
-      end
     end
 
     def anomaly?(series)
