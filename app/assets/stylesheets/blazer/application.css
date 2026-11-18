@@ -144,6 +144,10 @@ input.search:focus {
   color: #5cb85c;
 }
 
+.check-state.paused {
+  color: #999;
+}
+
 .check-state.error {
   color: #666;
 }

@@ -1,6 +1,6 @@
 module Blazer
   class ChecksController < BaseController
-    before_action :set_check, only: [:edit, :update, :destroy, :run]
+    before_action :set_check, only: [:edit, :update, :destroy, :run, :pause, :unpause]
 
     def index
       state_order = [nil, "disabled", "error", "timed out", "failing", "passing"]
@@ -46,10 +46,20 @@ module Blazer
       redirect_to query_path(@query)
     end
 
+    def pause
+      @check.update!(paused_at: Time.now)
+      redirect_to checks_path
+    end
+
+    def unpause
+      @check.update!(paused_at: nil)
+      redirect_to checks_path
+    end
+
     private
 
     def check_params
-      params.require(:check).permit(:query_id, :invert, :check_type, :schedule, *Blazer.notifiers.flat_map(&:fields))
+      params.require(:check).permit(:query_id, :invert, :check_type, :schedule, :minimum_value, *Blazer.notifiers.flat_map(&:fields))
     end
 
     def set_check

@@ -40,6 +40,8 @@ ActiveRecord::Schema.define do
     t.string :check_type
     t.text :message
     t.datetime :last_run_at
+    t.datetime :paused_at
+    t.decimal :minimum_value
     t.timestamps null: false
   end
 

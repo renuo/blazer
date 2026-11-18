@@ -143,7 +143,7 @@ module Blazer
     checks = Blazer::Check.includes(:query)
     checks = checks.where(schedule: schedule) if schedule
     checks.find_each do |check|
-      next if check.state == "disabled"
+      next if check.state == "disabled" || check.paused?
       Safely.safely { run_check(check) }
     end
   end

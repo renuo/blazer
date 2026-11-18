@@ -167,6 +167,41 @@ class ChecksTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_paused_check_is_not_run
+    query = create_query
+    check = create_check(query: query, check_type: "bad_data", paused_at: Time.now)
+
+    Blazer.run_checks(schedule: "5 minutes")
+    check.reload
+    assert_equal "new", check.state
+  end
+
+  def test_unpaused_check_is_run
+    query = create_query
+    check = create_check(query: query, check_type: "bad_data", paused_at: Time.now)
+
+    check.update!(paused_at: nil)
+    Blazer.run_checks(schedule: "5 minutes")
+    check.reload
+    assert_equal "failing", check.state
+  end
+
+  def test_pause_and_unpause
+    check = create_check(query: create_query, check_type: "bad_data")
+
+    post blazer.pause_check_path(check)
+    assert_redirected_to blazer.checks_path
+    assert check.reload.paused?
+
+    get blazer.checks_path
+    assert_match "PAUSED", response.body
+    assert_match "Resume", response.body
+
+    post blazer.unpause_check_path(check)
+    assert_redirected_to blazer.checks_path
+    refute check.reload.paused?
+  end
+
   private
 
   def assert_slack_messages(expected)

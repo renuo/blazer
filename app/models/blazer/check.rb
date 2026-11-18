@@ -22,6 +22,8 @@ module Blazer
           Blazer.check_types.fetch(check_type).fetch(:block).call(result)
         end
 
+      self.state = "passing" if state == "failing" && below_minimum_value?(result, check_type)
+
       self.last_run_at = Time.now if respond_to?(:last_run_at=)
       self.message = message if respond_to?(:message=)
 
@@ -43,6 +45,10 @@ module Blazer
       save! if changed?
     end
 
+    def paused?
+      respond_to?(:paused_at) && paused_at.present?
+    end
+
     def computed_check_type
       if respond_to?(:check_type)
         check_type
@@ -54,6 +60,14 @@ module Blazer
     end
 
     private
+
+    # anomalies are ignored while the most recent value is below the minimum value
+    def below_minimum_value?(result, check_type)
+      return false unless check_type == "anomaly" && respond_to?(:minimum_value) && minimum_value.present?
+
+      value = result.most_recent_value
+      value.present? && value < minimum_value
+    end
 
     def set_state
       self.state ||= "new"
