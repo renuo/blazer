@@ -2,6 +2,7 @@ ActiveRecord::Schema.define do
   create_table :blazer_queries do |t|
     t.references :creator
     t.string :name
+    t.text :gpt_prompt
     t.text :description
     t.text :statement
     t.string :data_source
@@ -20,6 +21,7 @@ ActiveRecord::Schema.define do
   create_table :blazer_dashboards do |t|
     t.references :creator
     t.string :name
+    t.text :positions
     t.timestamps null: false
   end
 

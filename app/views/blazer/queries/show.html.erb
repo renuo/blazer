@@ -1,24 +1,27 @@
 <% blazer_title @query.name %>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+<div class="topbar">
   <div class="container">
-    <%= render partial: "blazer/nav" %>
-    <div class="navbar-brand">
-      <%= @query.name %>
-    </div>
+    <div class="row name-row">
+      <div class="col-sm-9">
+        <%= render partial: "blazer/nav" %>
+        <h3 class="name-header">
+          <%= @query.name %>
+        </h3>
+      </div>
+      <div class="col-sm-3 text-right">
+        <%= link_to "Edit", edit_query_path(@query, params: variable_params(@query)), class: "btn btn-default", disabled: !@query.editable?(blazer_user) %>
+        <%= link_to "Fork", new_query_path(params: {variables: variable_params(@query), fork_query_id: @query.id, data_source: @query.data_source, name: @query.name}), class: "btn btn-info" %>
 
-    <div class="nav ms-auto">
-      <%= link_to "Edit", edit_query_path(@query, variable_params(@query)), class: "btn btn-secondary", disabled: !@query.editable?(blazer_user) %>
-      <%= link_to "Fork", new_query_path(variable_params(@query).merge(fork_query_id: @query.id, data_source: @query.data_source, name: @query.name)), class: "btn btn-info ms-1" %>
-
-      <% if !@error && @success %>
-        <%= button_to "Download", run_queries_path(query_id: @query.id, format: "csv", forecast: params[:forecast], cohort_period: params[:cohort_period]), params: { statement: @statement }, class: "btn btn-primary ms-1" %>
-      <% end %>
+        <% if !@error && @success %>
+          <%= button_to "Download", run_queries_path(format: "csv"), params: @run_data, class: "btn btn-primary" %>
+        <% end %>
+      </div>
     </div>
   </div>
-</nav>
+</div>
 
-<div style="margin-bottom: 60px;"></div>
+<div class="topbar-margin"></div>
 
 <% if @sql_errors.any? %>
   <div class="alert alert-danger">
@@ -31,12 +34,12 @@
 <% end %>
 
 <% if @query.description.present? %>
-  <p style="white-space: pre-line;"><%= @query.description %></p>
+  <p class="query-description"><%= @query.description %></p>
 <% end %>
 
-<%= render partial: "blazer/variables", locals: { action: query_path(@query) } %>
+<%= render partial: "blazer/variables", locals: {action: query_path(@query)} %>
 
-<pre id="code" class="p-3 bg-light"><code><%= @statement.display_statement %></code></pre>
+<pre id="code"><code class="language-sql"><%= @statement.display_statement %></code></pre>
 
 <% if @success %>
   <div id="results">
@@ -44,26 +47,33 @@
   </div>
 
   <%= javascript_tag nonce: true do %>
+    const results = document.getElementById("results")
+
     function showRun(data) {
-      $("#results").html(data)
-      $("#results table").stupidtable(stupidtableCustomSettings).stickyTableHeaders({fixedOffset: 60})
+      renderResults(results, data)
+      const table = results.querySelector("table")
+      if (table) {
+        tablesort(table)
+        table.classList.add("stickytable")
+      }
     }
 
     function showError(message) {
-      $("#results").addClass("query-error").html(message)
+      results.classList.add("query-error")
+      results.textContent = message
     }
 
-    <%= blazer_js_var "data", @run_data %>
+    <%= blazer_js_var "runData", @run_data %>
 
-    runQuery(data, showRun, showError)
+    runQuery(runData, showRun, showError)
   <% end %>
 <% end %>
 
 <%= javascript_tag nonce: true do %>
   // do not highlight really long queries
   // this can lead to performance issues
-  var code = $("#code code")
-  if (code.text().length < 10000) {
-    hljs.highlightElement(code.get(0))
+  const code = document.querySelector("#code code")
+  if (code.textContent.length < 10000) {
+    hljs.highlightElement(code)
   }
 <% end %>

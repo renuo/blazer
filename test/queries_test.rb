@@ -2,20 +2,55 @@ require_relative "test_helper"
 
 class QueriesTest < ActionDispatch::IntegrationTest
   def setup
+    super
     Blazer::Audit.delete_all
     Blazer::Query.delete_all
   end
 
-  def test_index
+  def test_home
+    create_query
     get blazer.root_path
     assert_response :success
+    assert_match "Test", response.body
+  end
+
+  def test_index
+    get blazer.queries_path
+    assert_redirected_to blazer.root_path
+  end
+
+  def test_index_json
+    create_query
+    get blazer.queries_path, as: :json
+    assert_response :success
+    assert_match "Test", response.body
+  end
+
+  def test_new
+    get blazer.new_query_path
+    assert_response :success
+    assert_match "New Query", response.body
+  end
+
+  def test_new_fork_query_id
+    query = create_query(statement: "SELECT 1000")
+    get blazer.new_query_path(fork_query_id: query.id)
+    assert_response :success
+    assert_match "SELECT 1000", response.body
+  end
+
+  def test_new_upload_id
+    upload = Blazer::Upload.create!(table: "orders")
+    get blazer.new_query_path(upload_id: upload.id)
+    assert_response :success
+    assert_match "SELECT * FROM &quot;uploads&quot;.&quot;orders&quot; LIMIT 10", response.body
   end
 
   def test_create
     post blazer.queries_path, params: {query: {name: "Test", statement: "SELECT 1", data_source: "main"}}
-    assert_response :redirect
-
     query = Blazer::Query.last
+    assert_redirected_to blazer.query_path(query)
+
     get blazer.query_path(query)
     assert_response :success
 
@@ -33,16 +68,42 @@ class QueriesTest < ActionDispatch::IntegrationTest
     assert_match(/Statement can(&#39;|’)t be blank/, response.body)
   end
 
+  def test_show
+    query = create_query
+    get blazer.query_path(query)
+    assert_response :success
+    assert_match "Test", response.body
+  end
+
+  def test_edit
+    query = create_query
+    get blazer.edit_query_path(query)
+    assert_response :success
+    assert_match "Test", response.body
+  end
+
+  def test_refresh
+    query = create_query
+    post blazer.refresh_query_path(query)
+    assert_redirected_to blazer.query_path(query)
+  end
+
+  def test_update
+    query = create_query
+    patch blazer.query_path(query, params: {query: {name: "Updated"}})
+    query.reload
+    assert_redirected_to blazer.query_path(query)
+    assert_equal "Updated", query.name
+  end
+
   def test_destroy
     query = create_query
     delete blazer.query_path(query)
-    assert_response :redirect
-  end
+    assert_redirected_to blazer.root_path
 
-  def test_rollback
-    create_query
-    run_query "DELETE FROM blazer_queries"
-    assert_equal 1, Blazer::Query.count
+    assert_raises(ActiveRecord::RecordNotFound) do
+      query.reload
+    end
   end
 
   def test_tables
@@ -53,20 +114,27 @@ class QueriesTest < ActionDispatch::IntegrationTest
     assert_includes tables, "blazer_queries"
   end
 
-  def test_schema
-    get blazer.schema_queries_path(data_source: "main")
-    assert_response :success
-  end
-
   def test_docs
     get blazer.docs_queries_path(data_source: "main")
     assert_response :success
+    assert_match "Docs: main", response.body
   end
 
-  def test_refresh
-    query = create_query
-    post blazer.refresh_query_path(query)
-    assert_response :redirect
+  def test_schema
+    get blazer.schema_queries_path(data_source: "main")
+    assert_response :success
+    assert_match "Schema: main", response.body
+  end
+
+  def test_cancel
+    post blazer.cancel_queries_path("run-id", data_source: "main")
+    assert_response :success
+  end
+
+  def test_rollback
+    create_query
+    run_query "DELETE FROM blazer_queries"
+    assert_equal 1, Blazer::Query.count
   end
 
   def test_variables_time
@@ -81,6 +149,15 @@ class QueriesTest < ActionDispatch::IntegrationTest
     get blazer.query_path(query)
     assert_response :success
     assert_match "daterangepicker", response.body
+  end
+
+  def test_variables_time_range_custom_ranges
+    query = create_query(statement: "SELECT {start_time}, {end_time}")
+    stub_method(Blazer, :timepicker_ranges, [["Yesterday", 1, 1]]) do
+      get blazer.query_path(query)
+    end
+    assert_response :success
+    assert_match %!const timepickerRanges = [["Yesterday",1,1]];!, response.body
   end
 
   def test_variable_defaults

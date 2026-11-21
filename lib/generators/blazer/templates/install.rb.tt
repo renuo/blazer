@@ -21,7 +21,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version
 
     create_table :blazer_dashboards do |t|
       t.references :creator
-      t.text :name
+      t.string :name
       t.text :positions
       t.timestamps null: false
     end
@@ -44,6 +44,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version
       t.text :message
       t.datetime :last_run_at
       t.datetime :paused_at
+      t.decimal :minimum_value
       t.timestamps null: false
     end
   end

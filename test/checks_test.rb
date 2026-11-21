@@ -2,13 +2,80 @@ require_relative "test_helper"
 
 class ChecksTest < ActionDispatch::IntegrationTest
   def setup
+    super
     Blazer::Check.delete_all
     Blazer::Query.delete_all
   end
 
   def test_index
+    query = create_query
+    create_check(query: query, check_type: "bad_data", emails: "hi@example.org")
+
     get blazer.checks_path
     assert_response :success
+    assert_match "hi@example.org", response.body
+  end
+
+  def test_index_q
+    query = create_query
+    create_check(query: query, check_type: "bad_data", emails: "hi@example.org")
+    create_check(query: query, check_type: "bad_data", emails: "hello@example.org")
+
+    get blazer.checks_path(q: "hi")
+    assert_response :success
+    assert_match "hi@example.org", response.body
+    refute_match "hello@example.org", response.body
+  end
+
+  def test_new
+    get blazer.new_check_path
+    assert_response :success
+  end
+
+  def test_create
+    query = create_query
+
+    post blazer.checks_path(params: {check: {query_id: query.id, schedule: "5 minutes", check_type: "bad_data", emails: "hi@example.org"}})
+    assert_redirected_to blazer.query_path(query)
+  end
+
+  def test_edit
+    query = create_query
+    check = create_check(query: query, check_type: "bad_data")
+
+    get blazer.edit_check_path(check)
+    assert_response :success
+  end
+
+  def test_update
+    query = create_query
+    check = create_check(query: query, check_type: "bad_data")
+
+    patch blazer.check_path(check, params: {check: {schedule: "1 hour"}})
+    assert_redirected_to blazer.query_path(query)
+
+    check.reload
+    assert_equal "1 hour", check.schedule
+  end
+
+  def test_destroy
+    query = create_query
+    check = create_check(query: query, check_type: "bad_data")
+
+    delete blazer.check_path(check)
+    assert_redirected_to blazer.checks_path
+
+    assert_raises(ActiveRecord::RecordNotFound) do
+      check.reload
+    end
+  end
+
+  def test_run
+    query = create_query
+    check = create_check(query: query, check_type: "bad_data")
+
+    get blazer.run_check_path(check)
+    assert_redirected_to blazer.query_path(query)
   end
 
   def test_bad_data
@@ -66,6 +133,23 @@ class ChecksTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_emails_normalize
+    query = create_query
+    check = create_check(query: query, check_type: "bad_data", emails: "hi@example.org;hi2@example.org")
+    assert_equal "hi@example.org, hi2@example.org", check.emails
+
+    check.update!(emails: "hi@example.org,   hi2@example.org")
+    assert_equal "hi@example.org, hi2@example.org", check.emails
+  end
+
+  def test_emails_invalid
+    query = create_query
+
+    post blazer.checks_path(params: {check: {query_id: query.id, schedule: "5 minutes", check_type: "bad_data", emails: "hi"}})
+    assert_response :unprocessable_entity
+    assert_match "Invalid emails", response.body
+  end
+
   def test_slack
     query = create_query
     create_check(query: query, check_type: "bad_data", slack_channels: "#general,#random")
@@ -101,6 +185,24 @@ class ChecksTest < ActionDispatch::IntegrationTest
     check.reload
     assert_equal "failing", check.state
   end
+
+  def test_pause_and_unpause
+    check = create_check(query: create_query, check_type: "bad_data")
+
+    post blazer.pause_check_path(check)
+    assert_redirected_to blazer.checks_path
+    assert check.reload.paused?
+
+    get blazer.checks_path
+    assert_match "PAUSED", response.body
+    assert_match "Resume", response.body
+
+    post blazer.unpause_check_path(check)
+    assert_redirected_to blazer.checks_path
+    refute check.reload.paused?
+  end
+
+  private
 
   def assert_slack_messages(expected)
     count = 0

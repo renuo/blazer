@@ -1,12 +1,11 @@
 module Blazer
   class ChecksController < BaseController
     before_action :set_check, only: [:edit, :update, :destroy, :run, :pause, :unpause]
-    def edit
-    end
+
     def index
       state_order = [nil, "disabled", "error", "timed out", "failing", "passing"]
       @checks = Blazer::Check.joins(:query).includes(:query).order("blazer_queries.name, blazer_checks.id").to_a.sort_by { |q| state_order.index(q.state) || 99 }
-      @checks.select! { |c| "#{c.query.name} #{c.emails}".downcase.include?(params[:q]) } if params[:q]
+      @checks.select! { |c| "#{c.query.name} #{Blazer.notifiers.flat_map { |n| n.notify_list(c) }.join(", ")}".downcase.include?(params[:q]) } if params[:q]
     end
 
     def new
@@ -24,6 +23,9 @@ module Blazer
       else
         render_errors @check
       end
+    end
+
+    def edit
     end
 
     def update
@@ -57,7 +59,7 @@ module Blazer
     private
 
     def check_params
-      params.require(:check).permit(:query_id, :emails, :slack_channels, :invert, :check_type, :schedule, :minimum_value)
+      params.require(:check).permit(:query_id, :invert, :check_type, :schedule, :minimum_value, *Blazer.notifiers.flat_map(&:fields))
     end
 
     def set_check

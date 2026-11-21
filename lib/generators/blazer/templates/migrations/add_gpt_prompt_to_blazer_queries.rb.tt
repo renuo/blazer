@@ -1,0 +1,5 @@
+class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version %>
+  def change
+    add_column :blazer_queries, :gpt_prompt, :text unless column_exists?(:blazer_queries, :gpt_prompt)
+  end
+end

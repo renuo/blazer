@@ -1,31 +1,25 @@
 module Blazer
   module CompletionHelper
-    BLAZER_COMPLETION_COLUMN_SCORE = 1001
-    BLAZER_COMPLETION_COLUMN_META = 'column_name'
-    BLAZER_COMPLETION_TABLE_SCORE = 1000
-    BLAZER_COMPLETION_TABLE_META = 'table_name'
+    COLUMN_SCORE = 1001
+    TABLE_SCORE = 1000
 
-    def extract_tables_and_columns(schema)
-      schema.map do |schema_entry|
-        [schema_entry[:table], schema_entry[:columns]]
+    # the tables and columns for the autocompletion of the SQL editor
+    def blazer_table_name_completion_source(data_source)
+      schema = begin
+        data_source.schema
+      rescue StandardError => e
+        Rails.logger.warn("Blazer: no schema for the autocompletion: #{e.message}")
+        []
       end
-    end
 
-    def blazer_table_name_completion_source
-      extract_tables_and_columns(Blazer.data_sources['main'].schema).collect do |entry|
+      schema.map do |entry|
         {
-          value: entry.first,
-          columns: entry.last.map do |column|
-            {
-              value: column[:name],
-              score: BLAZER_COMPLETION_COLUMN_SCORE,
-              meta: BLAZER_COMPLETION_COLUMN_META
-            }
-          end,
-          score: BLAZER_COMPLETION_TABLE_SCORE,
-          meta: BLAZER_COMPLETION_TABLE_META
+          value: entry[:table],
+          columns: entry[:columns].map { |column| {value: column[:name], score: COLUMN_SCORE, meta: "column_name"} },
+          score: TABLE_SCORE,
+          meta: "table_name"
         }
-      end.to_json
+      end
     end
   end
 end

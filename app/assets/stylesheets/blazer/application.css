@@ -1,8 +1,12 @@
-@import "bootstrap";
-@import 'selectize';
-@import 'github';
-@import 'daterangepicker';
-@import 'gs_dashboards';
+/*
+ *= require ./bootstrap-sprockets
+ *= require ./bootstrap
+ *= require ./tom-select
+ *= require ./github
+ *= require ./daterangepicker
+ *= require ./gridstack
+ *= require_self
+ */
 
 pre {
   border: none;
@@ -34,6 +38,8 @@ table.results-table {
 input.search {
   border: none;
   box-shadow: none;
+  width: 300px;
+  display: inline-block;
 }
 
 input.search:focus {
@@ -49,16 +55,24 @@ input.search:focus {
   outline: none;
 }
 
-.form-inline .selectize-control, .text-end .selectize-control {
+.form-inline .ts-wrapper, .text-right .ts-wrapper {
   display: inline-block;
-  vertical-align: middle;
   margin-left: 5px;
   margin-right: 20px;
   text-align: left;
 }
 
-#statement-box .selectize-control {
+#statement-box .ts-wrapper {
   margin-right: 0;
+}
+
+.ts-control > input {
+  min-width: 0;
+}
+
+.has-items .ts-control > input {
+  margin-left: 1px !important;
+  margin-right: 0 !important;
 }
 
 #editor-container {
@@ -84,11 +98,11 @@ input.search:focus {
 }
 
 .chart {
+  height: 300px;
   text-align: center;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  flex: 1 1 auto;
 }
 
 .chart > .results-container {
@@ -131,6 +145,10 @@ input.search:focus {
   color: #5cb85c;
 }
 
+.check-state.paused {
+  color: #999;
+}
+
 .check-state.error {
   color: #666;
 }
@@ -143,8 +161,15 @@ input.search:focus {
   color: #000;
 }
 
-.check-state.paused {
-  color: #888;
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 1001;
+  border-bottom: solid 1px whitesmoke;
+  background-color: #fff;
 }
 
 .glyphicon-remove {
@@ -152,9 +177,7 @@ input.search:focus {
   color: #d9534f;
   display: none;
   float: right;
-  &::before {
-    content: 'X'
-  }
+  margin-top: 3px;
 }
 
 .list-group li:hover .glyphicon-remove {
@@ -167,6 +190,10 @@ input.search:focus {
 
 #header a.active {
   color: #999;
+}
+
+.header-div {
+  line-height: 34px;
 }
 
 #code {
@@ -214,7 +241,7 @@ h1, h2, h3, h4, p, hr, .table, .navbar, #header, .alert, .form-group {
   margin-bottom: 15px;
 }
 
-.double-margin {
+.double-margin, .chart-container {
   margin-bottom: 30px;
 }
 
@@ -226,12 +253,125 @@ h2 {
   font-size: 20px;
 }
 
-.selectize-dropdown .create {
+.schema-table {
+  max-width: 500px;
+}
+
+.ts-dropdown .create {
   padding: 5px 8px;
+}
+
+.ts-dropdown {
+  margin-top: 0 !important;
+}
+
+.user-header {
+  width: 20%;
+  text-align: right;
+}
+
+.state-header {
+  width: 10%;
+}
+
+.run-header {
+  width: 10%;
+}
+
+.notify-header {
+  width: 20%;
+}
+
+.actions-header {
+  width: 15%;
+}
+
+.description-header {
+  width: 60%;
+}
+
+.notifiers {
+  margin-bottom: 0;
+  word-break: break-all;
+}
+
+.table > tbody > tr > td.check-actions {
+  text-align: right;
+  padding: 1px;
+}
+
+#dashboard-actions {
+  padding-bottom: 140px;
+}
+
+.name-header {
+  line-height: 34px;
+  display: inline;
+  margin-left: 5px;
+}
+
+.name-row {
+  padding-top: 13px;
+}
+
+.topbar-margin {
+  margin-bottom: 60px;
+}
+
+.query-description {
+  white-space: pre-line;
+}
+
+.nav-btn-group {
+  vertical-align: top;
+  margin-right: 5px;
+}
+
+.docs-table {
+  max-width: 500px;
+}
+
+.docs-table .first-header {
+  width: 20%;
+}
+
+.column-name {
+  width: 60%;
+}
+
+.stickytable thead {
+  position: sticky;
+  top: 60px;
+}
+
+.stickytable th {
+  box-shadow: inset 0 -2px 0 0 #ddd;
+}
+
+.table.stickytable > thead > tr > th {
+  border-bottom: none;
+}
+
+.table.stickytable > tbody > tr:first-child > td {
+  border-top: none;
+}
+
+.hljs-variable {
+  font-weight: normal;
+}
+
+.grid-stack {
+  background: #efefed;
+  margin: 10px;
+}
+
+.grid-stack-item-content {
+  color: #2c3e50;
+  text-align: center;
+  background-color: white;
 }
 
 .single-value {
   width: 100%;
   height: 100%;
 }
-

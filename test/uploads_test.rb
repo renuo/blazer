@@ -3,7 +3,7 @@ require_relative "test_helper"
 class UploadsTest < ActionDispatch::IntegrationTest
   def setup
     skip unless postgresql?
-
+    super
     Blazer::Upload.delete_all
     Blazer::UploadsConnection.connection.execute("DROP SCHEMA IF EXISTS uploads CASCADE")
     Blazer::UploadsConnection.connection.execute("CREATE SCHEMA uploads")
@@ -21,9 +21,9 @@ class UploadsTest < ActionDispatch::IntegrationTest
 
   def test_create
     create_upload
-    assert_response :redirect
-
     upload = Blazer::Upload.last
+    assert_redirected_to blazer.upload_path(upload)
+
     assert_equal "line_items", upload.table
     assert_equal "Billing line items", upload.description
 
@@ -41,7 +41,8 @@ class UploadsTest < ActionDispatch::IntegrationTest
 
   def test_create_duplicate_table
     create_upload
-    assert_response :redirect
+    upload = Blazer::Upload.last
+    assert_redirected_to blazer.upload_path(upload)
     Blazer::Upload.delete_all
 
     create_upload
@@ -49,16 +50,44 @@ class UploadsTest < ActionDispatch::IntegrationTest
     assert_match "Table already exists", response.body
   end
 
-  def test_rename
+  def test_show
     create_upload
-    assert_response :redirect
-
     upload = Blazer::Upload.last
+
+    get blazer.upload_path(upload)
+    assert_redirected_to blazer.new_query_path(upload_id: upload.id)
+  end
+
+  def test_edit
+    create_upload
+    upload = Blazer::Upload.last
+
+    get blazer.edit_upload_path(upload)
+    assert_response :success
+  end
+
+  def test_update_rename
+    create_upload
+    upload = Blazer::Upload.last
+    assert_redirected_to blazer.upload_path(upload)
+
     patch blazer.upload_path(upload), params: {upload: {table: "items"}}
-    assert_response :redirect
+    assert_redirected_to blazer.upload_path(upload)
 
     tables = Blazer::UploadsConnection.connection.select_all("SELECT table_name FROM information_schema.tables WHERE table_schema = 'uploads'").rows.map(&:first)
     assert_equal ["items"], tables
+  end
+
+  def test_destroy
+    create_upload
+    upload = Blazer::Upload.last
+
+    delete blazer.upload_path(upload)
+    assert_redirected_to blazer.uploads_path
+
+    assert_raises(ActiveRecord::RecordNotFound) do
+      upload.reload
+    end
   end
 
   def test_bad_content_type
@@ -78,6 +107,8 @@ class UploadsTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_match "Duplicate column name: a", response.body
   end
+
+  private
 
   def create_upload(file: "line_items.csv", content_type: "text/csv")
     post blazer.uploads_path, params: {upload: {table: "line_items", description: "Billing line items", file: fixture_file_upload("test/support/#{file}", content_type)}}

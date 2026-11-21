@@ -43,7 +43,7 @@ module Blazer
         name: params[:name]
       )
       if params[:fork_query_id]
-        @query.statement ||= Blazer::Query.find(params[:fork_query_id]).try(:statement)
+        @query.statement ||= Blazer::Query.find(params[:fork_query_id]).statement
       end
       if params[:upload_id]
         upload = Blazer::Upload.find(params[:upload_id])
@@ -125,6 +125,7 @@ module Blazer
           @columns = @result.columns
           @rows = @result.rows
           @error = @result.error
+          @explain = @result.explain
           @just_cached = !@result.error && @result.cached_at.present?
           @cached_at = nil
           params[:data_source] = nil
@@ -163,6 +164,7 @@ module Blazer
           @columns = @result.columns
           @rows = @result.rows
           @error = @result.error
+          @explain = @result.explain
           @cached_at = @result.cached_at
           @just_cached = @result.just_cached
 
@@ -210,7 +212,7 @@ module Blazer
     end
 
     def tables
-      render json: @data_source.schema.map { |x| x[:schema] + '.' + x[:table] }
+      render json: @data_source.tables
     end
 
     def docs
@@ -372,7 +374,9 @@ module Blazer
     end
 
     def query_params
-      params.require(:query).permit(:name, :description, :statement, :data_source, :gpt_prompt)
+      permitted = [:name, :description, :statement, :data_source]
+      permitted << :gpt_prompt if Blazer::Query.column_names.include?("gpt_prompt")
+      params.require(:query).permit(*permitted)
     end
 
     def blazer_params

@@ -11,8 +11,6 @@ gem "sqlite3"
 gem "mysql2"
 gem "trilogy"
 gem "propshaft"
-gem "bootstrap"
-gem "dartsass-rails"
 
 # data sources
 # gem "activerecord7-redshift-adapter-pennylane"

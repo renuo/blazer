@@ -1,3 +1,25 @@
+## 5.0.0 (renuo only)
+
+Merged the upstream version 3.5.2, which includes the fix for the stored XSS vulnerability
+([GHSA-m5f6-4589-m89f](https://github.com/ankane/blazer/security/advisories/GHSA-m5f6-4589-m89f)).
+
+- The UI and the assets come from upstream again: Bootstrap 3 styles, no jQuery, Vue, Selectize and Bootstrap 5 anymore.
+  Propshaft is supported natively, so layout overrides and the `bootstrap` and `popper_js` gems for Blazer
+  are not needed anymore.
+- Removed the `chart_library` setting
+- Dashboards have a grid layout again (gridstack is bundled instead of loaded from a CDN)
+- Added a minimum value for anomaly checks and the ability to pause checks
+- Added `timepicker_ranges` and the SQL generator with OpenAI again. The SQL is validated with the Blazer data source
+  (in a transaction with a timeout) and not with the database of the app.
+- Autocompletion for tables and columns in the SQL editor
+
+To upgrade, run:
+
+```sh
+rails generate blazer:upgrade
+rails db:migrate
+```
+
 ## 4.2.0 (renuo only)
 
 - Added ability to pause checks
@@ -18,6 +40,32 @@ rails db:migrate
 # GPT queries generator
 - You need to add a new column: `add_column :blazer_queries, :gpt_prompt, :text`
 - You can activate GPT prompt by adding `gem "ruby-openai"` and setting and `OPENAI_API_KEY` key.
+
+## 3.5.3 (unreleased)
+
+- Fixed syntax highlighting for queries with variables
+
+## 3.5.2 (2026-09-24)
+
+- Fixed error message when status text not available
+
+## 3.5.1 (2026-07-31)
+
+- Fixed delete buttons
+- Fixed table preview and schema page for Postgres < 16
+- Fixed error with Sass
+
+## 3.5.0 (2026-07-27)
+
+- Fixed stored XSS vulnerability - [more info](https://github.com/ankane/blazer/security/advisories/GHSA-m5f6-4589-m89f)
+- Added materialized views to table preview and schema page for Postgres
+- Added support for ClickHouse
+- Added `catalog` setting for Amazon Athena
+- Improved support for Snowflake
+
+## 3.4.0 (2026-04-20)
+
+- Dropped support for Ruby < 3.3 and Rails < 7.2
 
 ## 3.3.0 (2025-04-12)
 
@@ -159,7 +207,6 @@ rails db:migrate
 ## 2.3.1 (2020-11-23)
 
 - Improved column names for uploads
-- Allow to configure time range selector preset ranges
 
 ## 2.3.0 (2020-11-16)
 

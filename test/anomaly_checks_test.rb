@@ -2,6 +2,7 @@ require_relative "test_helper"
 
 class AnomalyChecksTest < ActionDispatch::IntegrationTest
   def setup
+    super
     Blazer::Check.delete_all
     Blazer::Query.delete_all
   end
@@ -22,6 +23,24 @@ class AnomalyChecksTest < ActionDispatch::IntegrationTest
     assert_anomaly("anomaly_detection")
   end
 
+  def test_minimum_value
+    skip if !postgresql? || RUBY_ENGINE == "truffleruby"
+
+    with_option(:anomaly_checks, "anomaly_detection") do
+      query = create_query(statement: "SELECT current_date + n AS day, 0.1 * random() AS v FROM generate_series(1, 30) n UNION ALL SELECT current_date + 31, 2 AS v")
+      check = create_check(query: query, check_type: "anomaly", minimum_value: 5)
+
+      Blazer.run_checks(schedule: "5 minutes")
+      assert_equal "passing", check.reload.state
+
+      check.update!(minimum_value: 1)
+      Blazer.run_checks(schedule: "5 minutes")
+      assert_equal "failing", check.reload.state
+    end
+  end
+
+  private
+
   def assert_anomaly(anomaly_checks)
     skip if !postgresql? || RUBY_ENGINE == "truffleruby"
 
@@ -32,12 +51,42 @@ class AnomalyChecksTest < ActionDispatch::IntegrationTest
       Blazer.run_checks(schedule: "5 minutes")
       check.reload
       assert_equal "passing", check.state
+      assert_equal "No anomalies detected", check.message
 
-      query.update!(statement: "SELECT current_date + n AS day, 0.1 * random() FROM generate_series(1, 30) n UNION ALL SELECT current_date + 31, 2")
+      query.update!(statement: "SELECT current_date + n AS day, 0.1 * random() AS v FROM generate_series(1, 30) n UNION ALL SELECT current_date + 31, 2 AS v")
 
       Blazer.run_checks(schedule: "5 minutes")
       check.reload
       assert_equal "failing", check.state
+      assert_equal "Anomaly detected in v", check.message
+
+      query.update!(statement: "SELECT current_date + n AS day, 'A' AS category, 0.1 * random() FROM generate_series(1, 30) n UNION ALL SELECT current_date + 31 AS day, 'A' AS category, 2")
+
+      Blazer.run_checks(schedule: "5 minutes")
+      check.reload
+      assert_equal "failing", check.state
+      assert_equal "Anomaly detected in A", check.message
+
+      query.update!(statement: "SELECT current_date + n AS day, 0 AS status, 0.1 * random() FROM generate_series(1, 30) n UNION ALL SELECT current_date + 31 AS day, 0 AS status, 2")
+
+      Blazer.run_checks(schedule: "5 minutes")
+      check.reload
+      assert_equal "failing", check.state
+      assert_equal "Anomaly detected in Active", check.message
+
+      query.update!(statement: "SELECT 1")
+
+      Blazer.run_checks(schedule: "5 minutes")
+      check.reload
+      assert_equal "error", check.state
+      assert_equal "Bad format", check.message
+
+      query.update!(statement: "SELECT current_date, 1 LIMIT 0")
+
+      Blazer.run_checks(schedule: "5 minutes")
+      check.reload
+      assert_equal "error", check.state
+      assert_equal "No data", check.message
     end
   end
 end

@@ -1,10 +1,5 @@
-//= require ./jquery
-//= require ./gs_dashboards
-//= require ./rails-ujs
-//= require ./stupidtable
-//= require ./stupidtable-custom-settings
-//= require ./jquery.stickytableheaders
-//= require ./selectize
+//= require ./tablesort
+//= require ./tom-select.base
 //= require ./highlight.min
 //= require ./moment
 //= require ./moment-timezone-with-data
@@ -15,75 +10,155 @@
 //= require ./mapkick.bundle
 //= require ./ace
 //= require ./Sortable
-//= require popper
-//= require bootstrap
-//= require ./vue.global.prod
 //= require ./routes
 //= require ./queries
-//= require ./prompts
-//= require ./query-form
 //= require ./fuzzysearch
+//= require ./gridstack-all
+//= require ./gs_dashboards
 //= require ./textFit
 
-$(document).on('mouseenter', '.dropdown-toggle', function () {
-  $(this).parent().addClass('open')
+hljs.getLanguage("sql").contains.push({scope: "variable", match: /\{\w+\}/})
+
+document.addEventListener("mouseover", function (e) {
+  const target = e.target.closest(".dropdown-toggle")
+  if (target) {
+    target.parentElement.classList.add("open")
+  }
 })
 
-$(document).on("change", "#bind input, #bind select", function () {
-  submitIfCompleted($(this).closest("form"))
-})
-
-$(document).on("click", "#code", function () {
-  $(this).addClass("expanded")
-})
-
-$(document).on("click", "a[disabled]", function (e) {
-  e.preventDefault()
-})
-
-function submitIfCompleted($form) {
-  var completed = true
-  $form.find("input[name], select").each( function () {
-    if ($(this).val() == "") {
-      completed = false
+document.addEventListener("click", function (e) {
+  const dropdown = document.querySelector(".dropdown-toggle")
+  if (dropdown) {
+    if (dropdown.contains(e.target)) {
+      dropdown.parentElement.classList.toggle("open")
+    } else {
+      dropdown.parentElement.classList.remove("open")
     }
-  })
+  }
+})
+
+document.addEventListener("change", function (e) {
+  const target = e.target.closest("#bind input, #bind select")
+  if (target) {
+    submitIfCompleted(target.closest("form"))
+  }
+})
+
+document.addEventListener("click", function (e) {
+  const target = e.target.closest("#code")
+  if (target) {
+    target.classList.add("expanded")
+  }
+})
+
+document.addEventListener("click", function (e) {
+  const target = e.target.closest("a[disabled]")
+  if (target) {
+    e.preventDefault()
+  }
+})
+
+document.addEventListener("click", function (e) {
+  const target = e.target.closest("a[data-confirm]")
+  if (target) {
+    if (!window.confirm(target.getAttribute("data-confirm"))) {
+      e.preventDefault()
+      e.stopImmediatePropagation()
+    }
+  }
+})
+
+function isSameOrigin(href) {
+  return new URL(href, window.location.href).origin === window.location.origin
+}
+
+document.addEventListener("click", function (e) {
+  const target = e.target.closest("a[data-method]")
+  if (target) {
+    e.preventDefault()
+
+    const form = document.createElement("form")
+    form.method = "post"
+    form.action = target.href
+    form.hidden = true
+
+    let params = {"_method": target.getAttribute("data-method")}
+    if (isSameOrigin(target.href)) {
+      params = csrfProtect(params)
+    }
+
+    for (const [k, v] of Object.entries(params)) {
+      const input = document.createElement("input")
+      input.type = "hidden"
+      input.name = k
+      input.value = v
+      form.append(input)
+    }
+
+    document.body.append(form)
+    form.submit()
+  }
+})
+
+// make autofocus work with back button
+window.addEventListener("pageshow", function (e) {
+  if (e.persisted) {
+    const element = document.querySelector("input[autofocus]")
+    if (element) {
+      element.focus()
+    }
+  }
+})
+
+function submitIfCompleted(form) {
+  let completed = true
+  for (const input of form.querySelectorAll("input[name], select")) {
+    if (input.value == "") {
+      completed = false
+      break
+    }
+  }
   if (completed) {
-    $form.submit()
+    form.submit()
   }
 }
 
-// Prevent backspace from navigating backwards.
-// Adapted from Biff MaGriff: http://stackoverflow.com/a/7895814/1196499
-function preventBackspaceNav() {
-  $(document).keydown(function (e) {
-    var preventKeyPress
-    if (e.keyCode == 8) {
-      var d = e.srcElement || e.target
-      switch (d.tagName.toUpperCase()) {
-        case 'TEXTAREA':
-          preventKeyPress = d.readOnly || d.disabled
-          break
-        case 'INPUT':
-          preventKeyPress = d.readOnly || d.disabled || (d.attributes["type"] && $.inArray(d.attributes["type"].value.toLowerCase(), ["radio", "reset", "checkbox", "submit", "button"]) >= 0)
-          break
-        case 'DIV':
-          preventKeyPress = d.readOnly || d.disabled || !(d.attributes["contentEditable"] && d.attributes["contentEditable"].value == "true")
-          break
-        default:
-          preventKeyPress = true
-          break
-      }
-    }
-    else {
-      preventKeyPress = false
-    }
-
-    if (preventKeyPress) {
-      e.preventDefault()
-    }
-  })
+function show(element) {
+  element.classList.remove("hide")
 }
 
-preventBackspaceNav()
+function hide(element) {
+  element.classList.add("hide")
+}
 
+function toggle(element, found) {
+  if (found) {
+    show(element)
+  } else {
+    hide(element)
+  }
+}
+
+function pathParams(params) {
+  return (new URLSearchParams(params)).toString()
+}
+
+function getJSON(url, success, controller) {
+  const options = {headers: {"Accept": "application/json"}}
+  if (controller) {
+    options.signal = controller.signal
+  }
+  fetch(url, options)
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error(response.statusText || `An error occurred: ${response.status}`)
+      }
+      return response.json()
+    })
+    .then(success)
+}
+
+function renderResults(element, data) {
+  const range = document.createRange()
+  element.replaceChildren(range.createContextualFragment(data))
+}

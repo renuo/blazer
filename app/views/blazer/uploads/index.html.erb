@@ -1,7 +1,7 @@
 <% blazer_title "Uploads" %>
 
 <div id="header">
-  <div class="text-end" style="line-height: 34px;">
+  <div class="pull-right header-div">
     <div class="btn-group">
       <%= link_to "New Upload", new_upload_path, class: "btn btn-info" %>
       <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -19,17 +19,17 @@
     </div>
   </div>
 
-  <input id="search" type="text" placeholder="Start typing a table or person" style="width: 300px; display: inline-block;" class="search form-control" />
+  <input id="search" type="text" placeholder="Start typing a table or person" class="search form-control" autofocus />
 </div>
 
 <table id="uploads" class="table">
   <thead>
     <tr>
       <th>Table</th>
-      <th style="width: 60%;"></th>
+      <th class="description-header"></th>
       <% if Blazer.user_class %>
-        <th style="width: 20%; text-align: right;">Mastermind</th>
-      <% end%>
+        <th class="user-header">Mastermind</th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -46,10 +46,10 @@
 </table>
 
 <%= javascript_tag nonce: true do %>
-  $("#search").on("keyup", function() {
-    var value = $(this).val().toLowerCase()
-    $("#uploads tbody tr").filter( function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    })
-  }).focus()
+  document.getElementById("search").addEventListener("input", function () {
+    const value = this.value.toLowerCase()
+    for (const upload of document.querySelectorAll("#uploads tbody tr")) {
+      toggle(upload, upload.textContent.toLowerCase().includes(value))
+    }
+  })
 <% end %>
